@@ -32,7 +32,7 @@ static NSString *const kJACard = @"kJACard";
 
 @interface JACardView ()<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic,strong) NSMutableArray *btntStatus;
+@property (nonatomic,strong) NSMutableArray *cardStatus;
 
 @property (nonatomic,strong) UITableView *tableView;
 
@@ -43,17 +43,12 @@ static NSString *const kJACard = @"kJACard";
 @implementation JACardView
 
 #pragma mark - Public
-- (instancetype)initCardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData {
+- (instancetype)initCardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate {
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.responseData = [[NSMutableArray alloc]initWithArray:responseData];
-        
-        self.btntStatus = [[NSMutableArray alloc]init];
-        for (NSInteger i=0; i<self.responseData.count; i++) {
-            BOOL selected = NO;
-            [self.btntStatus addObject:@(selected)];
-        }
+        self.dataSource = dataSource;
+        self.delegate = delegate;
         
         self.defaultExhibitionLineCount = kDefaultExhibitionLineCount;
         self.maxExhibitionLineCount = 0;
@@ -70,6 +65,7 @@ static NSString *const kJACard = @"kJACard";
         self.subTitleSuffix = @"";
         self.titleViewColorString = @"#FFFFFF";
         self.subTitleColorString = @"#6478B5";
+        self.contentColorString = @"#333333";
         
         [self initSubViews];
         
@@ -77,21 +73,21 @@ static NSString *const kJACard = @"kJACard";
     return self;
 }
 
-+ (instancetype)cardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData {
-    return [[self alloc]initCardViewWithFrame:frame responseData:responseData];
++ (instancetype)cardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate; {
+    return [[self alloc]initCardViewWithFrame:frame dataSource:dataSource delegate:delegate];
 }
 
 - (void)resetExhibitionCardStatusAtIndex:(NSInteger)index {
-    [self.btntStatus replaceObjectAtIndex:index withObject:@(NO)];
+    [self.cardStatus replaceObjectAtIndex:index withObject:@(NO)];
     NSIndexPath *refreshPath = [NSIndexPath indexPathForRow:index inSection:0];
     [self.tableView reloadRowsAtIndexPaths:@[refreshPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)resetAllExhibitionCardsStatus {
     
-    NSArray *tempStatusArray = [NSArray arrayWithArray:self.btntStatus];
+    NSArray *tempStatusArray = [NSArray arrayWithArray:self.cardStatus];
     for (NSInteger i=0; i<tempStatusArray.count; i++) {
-        [self.btntStatus replaceObjectAtIndex:i withObject:@(NO)];
+        [self.cardStatus replaceObjectAtIndex:i withObject:@(NO)];
     }
     [self.tableView reloadData];
 }
@@ -107,7 +103,7 @@ static NSString *const kJACard = @"kJACard";
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.responseData.count;
+    return self.cardsCount;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -121,7 +117,7 @@ static NSString *const kJACard = @"kJACard";
     [card.moreBtn addTarget:self action:@selector(moreBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     card.moreBtn.tag = indexPath.row + 100;
     
-    BOOL selected = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
+    BOOL selected = [[self.cardStatus objectAtIndex:indexPath.row] boolValue];
     card.moreBtn.selected = selected;
     if (selected) {
         card.visibleExhibitionLineCount = self.maxExhibitionLineCount;
@@ -149,7 +145,7 @@ static NSString *const kJACard = @"kJACard";
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForToolBarViewWithCardOpened:atIndex:)]) {
-        BOOL status = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
+        BOOL status = [[self.cardStatus objectAtIndex:indexPath.row] boolValue];
         UIView *view = [self.delegate cardView:self viewForToolBarViewWithCardOpened:status atIndex:indexPath.row];
         [card setToolBarViewAndUpdateConstraints:view];
     }
@@ -194,7 +190,7 @@ static NSString *const kJACard = @"kJACard";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL status = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
+    BOOL status = [[self.cardStatus objectAtIndex:indexPath.row] boolValue];
     
     CGFloat toolBarHeight = 0;
     if ([self.delegate respondsToSelector:@selector(cardView:heightForToolBarViewWithCardOpened:atIndex:)]) {
@@ -211,17 +207,17 @@ static NSString *const kJACard = @"kJACard";
 #pragma mark - Action
 - (void)moreBtnAction:(UIButton*)sender {
     
-    NSNumber *selectNum = [self.btntStatus objectAtIndex:sender.tag - 100];
+    NSNumber *selectNum = [self.cardStatus objectAtIndex:sender.tag - 100];
     NSIndexPath *path = [NSIndexPath indexPathForRow:sender.tag - 100 inSection:0];
     
     if ([selectNum isEqualToNumber:@(NO)]) {//关闭状态，即将打开
-        [self.btntStatus replaceObjectAtIndex:sender.tag - 100 withObject:@(YES)];
+        [self.cardStatus replaceObjectAtIndex:sender.tag - 100 withObject:@(YES)];
         
         [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     }
     else if ([selectNum isEqualToNumber:@(YES)]) {//打开状态，即将关闭
         
-        [self.btntStatus replaceObjectAtIndex:sender.tag - 100 withObject:@(NO)];
+        [self.cardStatus replaceObjectAtIndex:sender.tag - 100 withObject:@(NO)];
         
         [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     }
@@ -229,11 +225,10 @@ static NSString *const kJACard = @"kJACard";
 }
 
 #pragma mark - Setter
-- (void)setResponseData:(NSMutableArray *)responseData {
-    _responseData = nil;
-    _responseData = responseData;
-    
-    if (_responseData.count == 0) {
+- (void)setCardsCount:(NSInteger)cardsCount {
+    _cardsCount = cardsCount;
+
+    if (_cardsCount == 0) {
         _tableView.hidden = YES;
         _noDataView.hidden = NO;
         
@@ -248,14 +243,14 @@ static NSString *const kJACard = @"kJACard";
         _maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
     }
     
-    if (!_btntStatus) {
-        _btntStatus = [[NSMutableArray alloc]init];
+    if (!_cardStatus) {
+        _cardStatus = [[NSMutableArray alloc]init];
     }
     
-    [_btntStatus removeAllObjects];
-    for (NSInteger i=0; i<_responseData.count; i++) {
+    [_cardStatus removeAllObjects];
+    for (NSInteger i=0; i<_cardsCount; i++) {
         BOOL selected = NO;
-        [_btntStatus addObject:@(selected)];
+        [_cardStatus addObject:@(selected)];
     }
     
     [_tableView reloadData];
@@ -270,7 +265,7 @@ static NSString *const kJACard = @"kJACard";
 
 - (void)setMaxExhibitionLineCount:(NSInteger)maxExhibitionLineCount {
     _maxExhibitionLineCount = maxExhibitionLineCount;
-    if (_maxExhibitionLineCount != _responseData.count / 2) {
+    if (_maxExhibitionLineCount != _cardsCount / 2) {
         [_tableView reloadData];
     }
 }

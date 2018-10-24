@@ -114,18 +114,16 @@
 /*
  * cardView初始化方法
  *
- * responseData   服务端下发的原始数据数组
  */
-- (instancetype)initCardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData;
+- (instancetype)initCardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
-+ (instancetype)cardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData;
++ (instancetype)cardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
 /*
- * JACardView数据源
+ * JACardView卡片数量
  *
- * 服务端下发的原始数据数组
  */
-@property (nonatomic,strong) NSMutableArray *responseData;
+@property (nonatomic,assign) NSInteger cardsCount;
 
 /*
  * 当前选中行

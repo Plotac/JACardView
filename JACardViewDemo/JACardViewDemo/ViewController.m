@@ -26,6 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = @"CardViewDemo";
     self.view.backgroundColor = UIColorFromHexStr(@"#F1F0F1");
     
     self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490"];
@@ -98,7 +99,7 @@
         for (NSInteger i=0; i<3; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(i *toolView.frame.size.width/3, 0, toolView.frame.size.width/3, 40);
-            button.tag = 500 + index;
+            button.tag = 500 + i;
             if (i == 0) {
                 [button setTitle:@"Red" forState:UIControlStateNormal];
                 [button setTitleColor:UIColorFromHexStr(@"#F33939") forState:UIControlStateNormal];
@@ -186,15 +187,14 @@
         make.size.mas_equalTo(CGSizeMake(self.view.frame.size.width - 30, 30));
     }];
     
-    self.cardView = [JACardView cardViewWithFrame:CGRectZero responseData:self.titles];
+    self.cardView = [JACardView cardViewWithFrame:CGRectZero dataSource:self delegate:self];
     self.cardView.backgroundColor = [UIColor clearColor];
-    self.cardView.dataSource = self;
-    self.cardView.delegate = self;
     self.cardView.showsVerticalScrollIndicator = NO;
     self.cardView.showHeaderView = YES;
     self.cardView.showRightSettingView = YES;
     self.cardView.showTitleHorizontalLine = YES;
     self.cardView.subTitleSuffix = @"：";
+    self.cardView.cardsCount = self.titles.count;
     self.cardView.autoFilterTransferredMeaningCharacterInSubTitle = YES;
     [self.view addSubview:self.cardView];
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
