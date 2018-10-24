@@ -69,8 +69,8 @@ static NSString *const kJACard = @"kJACard";
         self.theDistanceBetweenSubTitleAndSubTitleContent = -10;
         self.subTitleSuffix = @"";
         self.titleViewColorString = @"#FFFFFF";
+        self.subTitleColorString = @"#6478B5";
         
-        [self configNoDataView];
         [self initSubViews];
         
     }
@@ -112,73 +112,75 @@ static NSString *const kJACard = @"kJACard";
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    JACard *cell = [self.tableView dequeueReusableCellWithIdentifier:kJACard forIndexPath:indexPath];
+    JACard *card = [self.tableView dequeueReusableCellWithIdentifier:kJACard forIndexPath:indexPath];
     
     if (self.maxExhibitionLineCount == 0) {
         self.maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
     }
     
-    [cell.moreBtn addTarget:self action:@selector(moreBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    cell.moreBtn.tag = indexPath.row + 100;
+    [card.moreBtn addTarget:self action:@selector(moreBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    card.moreBtn.tag = indexPath.row + 100;
     
     BOOL selected = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
-    cell.moreBtn.selected = selected;
+    card.moreBtn.selected = selected;
     if (selected) {
-        cell.visibleExhibitionLineCount = self.maxExhibitionLineCount;
+        card.visibleExhibitionLineCount = self.maxExhibitionLineCount;
     }else {
-        cell.visibleExhibitionLineCount = self.defaultExhibitionLineCount;
+        card.visibleExhibitionLineCount = self.defaultExhibitionLineCount;
     }
     
-    cell.title = [self.dataSource.titlesOfCardView objectAtIndex:indexPath.row];
-    cell.subTitles = self.dataSource.subTitlesOfCardView;
-    cell.subContents = self.dataSource.contentsOfCardView;
+    card.title = [self.dataSource.titlesOfCardView objectAtIndex:indexPath.row];
+    card.subTitles = self.dataSource.subTitlesOfCardView;
+    card.subContents = self.dataSource.contentsOfCardView;
     
-    return cell;
+    return card;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    JACard *cardCell = (JACard*)cell;
+    JACard *card = (JACard*)cell;
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForTitleHeaderViewAtIndex:)]) {
         UIView *view = [self.delegate cardView:self viewForTitleHeaderViewAtIndex:indexPath.row];
-        [cardCell setHeadViewAndUpdateConstraints:view];
+        [card setHeadViewAndUpdateConstraints:view];
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForRightSettingViewAtIndex:)]) {
         UIView *view = [self.delegate cardView:self viewForRightSettingViewAtIndex:indexPath.row];
-        [cardCell setRightViewAndUpdateConstraints:view];
+        [card setRightViewAndUpdateConstraints:view];
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForToolBarViewWithCardOpened:atIndex:)]) {
         BOOL status = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
         UIView *view = [self.delegate cardView:self viewForToolBarViewWithCardOpened:status atIndex:indexPath.row];
-        [cardCell setToolBarViewAndUpdateConstraints:view];
+        [card setToolBarViewAndUpdateConstraints:view];
     }
     
-    cardCell.showHeaderView = self.showHeaderView;
-    cardCell.showRightSettingView = self.showRightSettingView;
-    cardCell.showTitleHorizontalLine = self.showTitleHorizontalLine;
-    cardCell.autoFilterTransferredMeaningCharacterInSubTitle = self.autoFilterTransferredMeaningCharacterInSubTitle;
-    cardCell.theSecondColumnDistanceFromCenterX = self.theSecondColumnDistanceFromCenterX;
-    cardCell.interval = self.interval;
-    cardCell.theDistanceBetweenSubTitleAndSubTitleContent = self.theDistanceBetweenSubTitleAndSubTitleContent;
-    cardCell.subTitleSuffix = self.subTitleSuffix;
-    cardCell.titleViewColorString = self.titleViewColorString;
+    card.showHeaderView = self.showHeaderView;
+    card.showRightSettingView = self.showRightSettingView;
+    card.showTitleHorizontalLine = self.showTitleHorizontalLine;
+    card.autoFilterTransferredMeaningCharacterInSubTitle = self.autoFilterTransferredMeaningCharacterInSubTitle;
+    card.theSecondColumnDistanceFromCenterX = self.theSecondColumnDistanceFromCenterX;
+    card.interval = self.interval;
+    card.theDistanceBetweenSubTitleAndSubTitleContent = self.theDistanceBetweenSubTitleAndSubTitleContent;
+    card.subTitleSuffix = self.subTitleSuffix;
+    card.titleViewColorString = self.titleViewColorString;
+    card.subTitleColorString = self.subTitleColorString;
+    card.contentColorString = self.contentColorString;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:titleLab:atIndex:)]) {
-        UILabel *titleLab = cardCell.titleLab;
+        UILabel *titleLab = card.titleLab;
         [self.delegate cardView:self titleLab:titleLab atIndex:indexPath.row];
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:subTitleLab:atSubTitlesIndex:)]) {
-        for (NSInteger i=0; i<cardCell.subTitleLabs.count; i++) {
-            UILabel *subTitleLab = [cardCell.subTitleLabs objectAtIndex:i];
+        for (NSInteger i=0; i<card.subTitleLabs.count; i++) {
+            UILabel *subTitleLab = [card.subTitleLabs objectAtIndex:i];
             [self.delegate cardView:self subTitleLab:subTitleLab atSubTitlesIndex:i];
         }
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:contentLab:atSubTitlesIndex:)]) {
-        for (NSInteger i=0; i<cardCell.subContentLabs.count; i++) {
-            UILabel *contentLab = [cardCell.subContentLabs objectAtIndex:i];
+        for (NSInteger i=0; i<card.subContentLabs.count; i++) {
+            UILabel *contentLab = [card.subContentLabs objectAtIndex:i];
             [self.delegate cardView:self contentLab:contentLab atSubTitlesIndex:i];
         }
     }
@@ -326,6 +328,20 @@ static NSString *const kJACard = @"kJACard";
     }
 }
 
+- (void)setSubTitleColorString:(NSString *)subTitleColorString {
+    _subTitleColorString = subTitleColorString;
+    if (_subTitleColorString && _subTitleColorString.length > 0) {
+        [_tableView reloadData];
+    }
+}
+
+- (void)setContentColorString:(NSString *)contentColorString {
+    _contentColorString = contentColorString;
+    if (_contentColorString && _contentColorString.length > 0) {
+        [_tableView reloadData];
+    }
+}
+
 - (void)setAutoFilterTransferredMeaningCharacterInSubTitle:(BOOL)autoFilterTransferredMeaningCharacterInSubTitle {
     _autoFilterTransferredMeaningCharacterInSubTitle = autoFilterTransferredMeaningCharacterInSubTitle;
     if (!_autoFilterTransferredMeaningCharacterInSubTitle) {
@@ -399,6 +415,8 @@ static NSString *const kJACard = @"kJACard";
 }
 
 - (void)initSubViews {
+    
+    [self configNoDataView];
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor clearColor];

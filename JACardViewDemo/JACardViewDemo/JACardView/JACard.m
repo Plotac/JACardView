@@ -226,7 +226,7 @@
                                                              }];
         UILabel *subTitleLab = [[UILabel alloc]init];
         subTitleLab.text = subTitle;
-        subTitleLab.textColor = UIColorFromHexStr(@"#6478B5");
+        subTitleLab.textColor = UIColorFromHexStr(self.subTitleColorString);
         subTitleLab.font = subTitleFont;
         
         [self.contentView addSubview:subTitleLab];
@@ -242,7 +242,7 @@
         
         UILabel *contentLab = [[UILabel alloc]init];
         contentLab.text = @"";
-        contentLab.textColor = UIColorFromHexStr(@"#333333");
+        contentLab.textColor = UIColorFromHexStr(self.contentColorString);
         contentLab.font = [UIFont systemFontOfSize:14];
         [self.contentView addSubview:contentLab];
         
@@ -302,6 +302,20 @@
     _titleView.backgroundColor = UIColorFromHexStr(_titleViewColorString);
 }
 
+- (void)setSubTitleColorString:(NSString *)subTitleColorString {
+    _subTitleColorString = subTitleColorString;
+    for (UILabel *subTitleLab in self.subTitleLabs) {
+        subTitleLab.textColor = UIColorFromHexStr(_subTitleColorString);
+    }
+}
+
+- (void)setContentColorString:(NSString *)contentColorString {
+    _contentColorString = contentColorString;
+    for (UILabel *contentLab in self.subContentLabs) {
+        contentLab.textColor = UIColorFromHexStr(_contentColorString);
+    }
+}
+
 - (void)setSubContents:(NSArray *)subContents {
     _subContents = subContents;
     
@@ -337,7 +351,6 @@
 
 - (void)setTheSecondColumnDistanceFromCenterX:(CGFloat)theSecondColumnDistanceFromCenterX {
     _theSecondColumnDistanceFromCenterX = theSecondColumnDistanceFromCenterX;
-    
     for (NSInteger i=0; i<self.subTitleLabs.count; i++) {
         UILabel *lab = [self.subTitleLabs objectAtIndex:i];
         [lab mas_updateConstraints:^(MASConstraintMaker *make) {

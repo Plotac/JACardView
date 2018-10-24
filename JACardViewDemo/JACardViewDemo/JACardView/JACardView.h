@@ -55,7 +55,7 @@
  *
  * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
  *
- * 使用此方法时，需使用- (CGFloat)cardView:(WTTradeNewCardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
+ * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
  *
  */
 - (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
@@ -121,7 +121,7 @@
 + (instancetype)cardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData;
 
 /*
- * WTTradeNewCardView数据源
+ * JACardView数据源
  *
  * 服务端下发的原始数据数组
  */
@@ -135,19 +135,19 @@
 @property (nonatomic,assign) NSInteger selectedIndex;
 
 /*
- * WTTradeNewCardView子标题数组
+ * JACardView子标题数组
  *
  */
 @property (nonatomic,strong,readonly) NSArray *subTitles;
 
 /*
- * WTTradeNewCardView 数据源
+ * JACardView 数据源
  *
  */
 @property (nonatomic,weak) id<JACardViewDataSource> dataSource;
 
 /*
- * WTTradeNewCardView 代理
+ * JACardView 代理
  *
  */
 @property (nonatomic,weak) id<JACardViewDelegate> delegate;
@@ -205,6 +205,22 @@
  * 默认白色(#FFFFFF)
  */
 @property (nonatomic,copy) NSString *titleViewColorString;
+
+/*
+ * 修改子标题字体颜色
+ * 十六进制颜色值
+ *
+ * 默认#6478B5
+ */
+@property (nonatomic,copy) NSString *subTitleColorString;
+
+/*
+ * 修改内容字体颜色
+ * 十六进制颜色值
+ *
+ * 默认#333333
+ */
+@property (nonatomic,copy) NSString *contentColorString;
 
 /*
  * 是否显示标题左侧View

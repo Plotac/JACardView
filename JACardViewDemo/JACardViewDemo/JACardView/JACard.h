@@ -26,6 +26,10 @@
 
 @property (nonatomic,copy) NSString *titleViewColorString;
 
+@property (nonatomic,copy) NSString *subTitleColorString;
+
+@property (nonatomic,copy) NSString *contentColorString;
+
 @property (nonatomic,assign) NSInteger visibleExhibitionLineCount;
 
 @property (nonatomic,assign) CGFloat theSecondColumnDistanceFromCenterX;
@@ -42,10 +46,10 @@
 
 @property (nonatomic,retain) UIButton *moreBtn;
 
-//存放子标题的数组
+//存放子标题的lab数组
 @property (nonatomic,retain) NSMutableArray *subTitleLabs;
 
-//存放子标题内容的数组
+//存放子标题内容的lab数组
 @property (nonatomic,retain) NSMutableArray *subContentLabs;
 
 - (void)setHeadViewAndUpdateConstraints:(UIView*)inputView;
