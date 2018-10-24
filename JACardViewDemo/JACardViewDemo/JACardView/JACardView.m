@@ -148,8 +148,9 @@ static NSString *const kJACard = @"kJACard";
         [cardCell setRightViewAndUpdateConstraints:view];
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForToolBarViewAtIndex:)]) {
-        UIView *view = [self.delegate cardView:self viewForToolBarViewAtIndex:indexPath.row];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:viewForToolBarViewWithCardOpened:atIndex:)]) {
+        BOOL status = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
+        UIView *view = [self.delegate cardView:self viewForToolBarViewWithCardOpened:status atIndex:indexPath.row];
         [cardCell setToolBarViewAndUpdateConstraints:view];
     }
     
@@ -194,8 +195,9 @@ static NSString *const kJACard = @"kJACard";
     BOOL status = [[self.btntStatus objectAtIndex:indexPath.row] boolValue];
     
     CGFloat toolBarHeight = 0;
-    if ([self.delegate respondsToSelector:@selector(cardView:heightForToolBarViewWithCardOpened:indexPath:)]) {
-        toolBarHeight = [self.delegate cardView:self heightForToolBarViewWithCardOpened:status indexPath:indexPath.row] + 20;
+    if ([self.delegate respondsToSelector:@selector(cardView:heightForToolBarViewWithCardOpened:atIndex:)]) {
+        CGFloat height = [self.delegate cardView:self heightForToolBarViewWithCardOpened:status atIndex:indexPath.row];
+        toolBarHeight = height == 0 ? height : height + 20;
     }
     
     if (status) {
@@ -388,22 +390,18 @@ static NSString *const kJACard = @"kJACard";
     self.noDataView.hidden = YES;
     [self addSubview:self.noDataView];
     
-//    UIImageView *imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"NOF_menu_jjcp_nodata"]];
-//    [imgView setCenter:CGPointMake(self.noDataView.center.x, imgView.center.y)];
-//    imgView.frame.origin.y = 0;
-//    imgView.bounds = CGRectMake(0, 0, 215, 170);
-//    [self.noDataView addSubview:imgView];
-//
-//    UILabel *lab = [UILabel new];
-//    [lab setCenter:CGPointMake(imgView.center.x, lab.center.y)];
-//    lab.center.x = imgView.center.x;
-//    lab.originY = CGRectGetMaxY(imgView.frame);
-//    lab.bounds = CGRectMake(0, 0, self.frame.size.width, 15);
-//    lab.textAlignment = NSTextAlignmentCenter;
-//    lab.text = @"暂无记录";
-//    lab.textColor = UIColorFromHexStr(@"#999999");
-//    lab.font = [UIFont systemFontOfSize:14];
-//    [self.noDataView addSubview:lab];
+    UIImageView *imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"none"]];
+    imgView.center = CGPointMake(self.noDataView.center.x, self.noDataView.center.y - 5);
+    imgView.bounds = CGRectMake(0, 0, 215, 170);
+    [self.noDataView addSubview:imgView];
+
+    UILabel *lab = [UILabel new];
+    lab.frame = CGRectMake(0, CGRectGetMaxY(imgView.frame), self.noDataView.frame.size.width, 15);
+    lab.textAlignment = NSTextAlignmentCenter;
+    lab.text = @"暂无记录";
+    lab.textColor = UIColorFromHexStr(@"#999999");
+    lab.font = [UIFont systemFontOfSize:14];
+    [self.noDataView addSubview:lab];
 }
 
 - (void)initSubViews {

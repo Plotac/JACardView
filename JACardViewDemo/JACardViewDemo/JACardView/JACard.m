@@ -104,8 +104,8 @@
     }];
     
     self.moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.moreBtn setImage:[UIImage imageNamed:@"NOF_menu_cd_arrow_nor"] forState:UIControlStateNormal];
-    [self.moreBtn setImage:[UIImage imageNamed:@"NOF_menu_cd_arrow_sel"] forState:UIControlStateSelected];
+    [self.moreBtn setImage:[UIImage imageNamed:@"card_arrow_down"] forState:UIControlStateNormal];
+    [self.moreBtn setImage:[UIImage imageNamed:@"card_arrow_up"] forState:UIControlStateSelected];
     [self.contentView addSubview:self.moreBtn];
     [self.moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.contentView);
