@@ -86,7 +86,7 @@
     }];
     
     self.horizontalLine = [[UIView alloc]init];
-    self.horizontalLine.backgroundColor = UIColorFromHexStr(@"#ECECEC");
+    self.horizontalLine.backgroundColor = UIColorFromHexStr(@"#EFEFEF");
     [self.contentView addSubview:self.horizontalLine];
     [self.horizontalLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.titleView);

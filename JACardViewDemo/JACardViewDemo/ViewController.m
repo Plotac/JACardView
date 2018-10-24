@@ -94,11 +94,15 @@
     UIView *toolView = nil;
     
     if (cardStatus) {
-        toolView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+        toolView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
+        
+        UIView *topLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+        topLine.backgroundColor = UIColorFromHexStr(@"#EFEFEF");
+        [toolView addSubview:topLine];
         
         for (NSInteger i=0; i<3; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(i *toolView.frame.size.width/3, 0, toolView.frame.size.width/3, 40);
+            button.frame = CGRectMake(i *toolView.frame.size.width/3, 0, toolView.frame.size.width/3, 45);
             button.tag = 500 + i;
             if (i == 0) {
                 [button setTitle:@"Red" forState:UIControlStateNormal];
@@ -112,7 +116,17 @@
             }
             [button addTarget:self action:@selector(toolBtnAction:) forControlEvents:UIControlEventTouchUpInside];
             [toolView addSubview:button];
+            
+            if (i != 0) {
+                UIView *horizontalLine = [[UIView alloc]initWithFrame:CGRectMake(i*toolView.frame.size.width/3, 0, 1, 45)];
+                horizontalLine.backgroundColor = UIColorFromHexStr(@"#EFEFEF");
+                [toolView addSubview:horizontalLine];
+            }
         }
+        
+        UIView *bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, toolView.frame.size.height - 1, self.view.frame.size.width, 1)];
+        bottomLine.backgroundColor = UIColorFromHexStr(@"#EFEFEF");
+        [toolView addSubview:bottomLine];
     }
     
     return toolView;
@@ -120,7 +134,7 @@
 
 - (CGFloat)cardView:(JACardView *)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index {
     if (cardStatus) {
-        return 40;
+        return 45;
     }
     return 0;
 }
