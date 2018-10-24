@@ -87,20 +87,20 @@
  * 修改某一条子标题label的相关属性
  *
  * @param subTitleLab  子标题lab
- * @param index        subTitleLab在cardView.headerInfos中的index
+ * @param index        subTitleLab在cardView.subTitles中的index
  *
  * e.g. 见 cardView:contentLab:atHeaderInfosIndex:
  */
-- (void)cardView:(JACardView*)cardView subTitleLab:(UILabel*)subTitleLab atHeaderInfosIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView subTitleLab:(UILabel*)subTitleLab atSubTitlesIndex:(NSInteger)index;
 
 /*
  * 修改某一条子标题内容label的相关属性
  *
  * @param contentLab   子标题内容lab
- * @param index        contentLab在cardView.headerInfos中的index
+ * @param index        contentLab在cardView.subTitles中的index
  *
  */
-- (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atHeaderInfosIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
 
 @end
 

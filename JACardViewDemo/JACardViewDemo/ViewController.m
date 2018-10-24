@@ -8,8 +8,16 @@
 
 #import "ViewController.h"
 #import "JACardView.h"
+#import "JAUtilities.h"
+#import "Masonry.h"
 
-@interface ViewController ()
+@interface ViewController ()<JACardViewDataSource,JACardViewDelegate>
+
+@property (nonatomic,strong) JACardView *cardView;
+
+@property (nonatomic,strong) NSArray *titles;
+@property (nonatomic,strong) NSArray *subTitles;
+@property (nonatomic,strong) NSArray *contents;
 
 @end
 
@@ -18,7 +26,181 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.backgroundColor = UIColorFromHexStr(@"#F1F0F1");
     
+    self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490"];
+    self.subTitles = @[@"基金帐号",@"基金份额",@"可用份额",@"最新市值",@"基金市值",@"成本价格",@"浮动盈亏",@"交易冻结",@"长期冻结",@"基金状态",@"基金净值",@"基金公司代码",@"客户号",@"基金公司",@"收费类型",@"收费名称"];
+    self.contents = @[@"0N1100829511",@"50000000.00",@"3000000.00",@"478143.43",@"3000234.89",@"353.43",@"-1341133124.13",@"1000.00",@"0.00",@"正常开放",@"311431412.00",@"0009431",@"1441314630043",@"噜噜噜基金",@"01",@"前端收费"];
+    
+    [self initSubViews];
+}
+
+#pragma mark - JACardViewDataSource
+- (NSArray*)titlesOfCardView {
+    NSMutableArray *titles = @[].mutableCopy;
+    
+    for (NSString *title in self.titles) {
+        
+        NSMutableAttributedString *attTitle = nil;
+        attTitle = [[NSMutableAttributedString alloc] initWithString:title];
+        
+        NSString *codeStr = [[title componentsSeparatedByString:@" "] lastObject];
+        NSRange codeRange = [title rangeOfString:codeStr];
+        
+        [attTitle addAttributes:@{
+                                  NSForegroundColorAttributeName : UIColorFromHexStr(@"#999999"),
+                                  NSFontAttributeName : [UIFont systemFontOfSize:13]
+                                  }
+                          range:codeRange];
+        
+        [titles addObject:attTitle];
+    }
+    
+    return titles;
+}
+
+- (NSArray*)subTitlesOfCardView {
+    return self.subTitles;
+}
+
+- (NSArray*)contentsOfCardView {
+    return self.contents;
+}
+
+#pragma mark - JACardViewDelegate
+- (UIView*)cardView:(JACardView *)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index {
+    UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 19, 19)];
+    imgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%d",arc4random()%6 + 1]];
+    return imgView;
+}
+
+- (UIView*)cardView:(JACardView *)cardView viewForRightSettingViewAtIndex:(NSInteger)index {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 55, 28);
+    button.backgroundColor = UIColorFromHexStr(@"#5893FB");
+    button.layer.masksToBounds = YES;
+    button.layer.cornerRadius = 14;
+    button.tag = 100 + index;
+    [button setTitle:@"Button" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(rightBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15];
+    
+    return button;
+}
+
+- (UIView*)cardView:(JACardView *)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index {
+    UIView *toolView = nil;
+    
+    if (cardStatus) {
+        toolView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+        
+        for (NSInteger i=0; i<3; i++) {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(i *toolView.frame.size.width/3, 0, toolView.frame.size.width/3, 40);
+            button.tag = 500 + index;
+            if (i == 0) {
+                [button setTitle:@"Red" forState:UIControlStateNormal];
+                [button setTitleColor:UIColorFromHexStr(@"#F33939") forState:UIControlStateNormal];
+            }else if (i == 1) {
+                [button setTitle:@"Blue" forState:UIControlStateNormal];
+                [button setTitleColor:UIColorFromHexStr(@"#5893FB") forState:UIControlStateNormal];
+            }else {
+                [button setTitle:@"Gray" forState:UIControlStateNormal];
+                [button setTitleColor:UIColorFromHexStr(@"#999999") forState:UIControlStateNormal];
+            }
+            [button addTarget:self action:@selector(toolBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+            [toolView addSubview:button];
+        }
+    }
+    
+    return toolView;
+}
+
+- (CGFloat)cardView:(JACardView *)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index {
+    if (cardStatus) {
+        return 40;
+    }
+    return 0;
+}
+
+- (void)cardView:(JACardView *)cardView contentLab:(UILabel *)contentLab atSubTitlesIndex:(NSInteger)index {
+    NSString *subTitle = [self.cardView.subTitles objectAtIndex:index];
+    if ([subTitle isEqualToString:@"浮动盈亏"]) {
+        NSString *content = contentLab.text;
+        if ([content doubleValue] > 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#F33939");
+        }else if ([content doubleValue] < 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#00B44B");
+        }else {
+            contentLab.textColor = UIColorFromHexStr(@"#333333");
+        }
+    }
+}
+
+- (void)segmentAction:(UISegmentedControl*)seg {
+    switch (seg.selectedSegmentIndex) {
+        case 0:{
+            self.cardView.showHeaderView = NO;
+            self.cardView.showRightSettingView = YES;
+        }
+            break;
+        case 1:{
+            self.cardView.showHeaderView = YES;
+            self.cardView.showRightSettingView = NO;
+        }
+            break;
+
+        case 2:{
+            self.cardView.showHeaderView = YES;
+            self.cardView.showRightSettingView = YES;
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)rightBtnAction:(UIButton*)sender {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"RightButton Action" message:[NSString stringWithFormat:@"CardIndex:%d",(int)sender.tag - 100] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)toolBtnAction:(UIButton*)sender {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ToolButton Action" message:[NSString stringWithFormat:@"ButtonIndex:%d",(int)sender.tag - 500] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)initSubViews {
+    
+    UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
+    [self.view addSubview:segment];
+    [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    [segment mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).with.offset(15);
+        make.top.equalTo(self.view).with.offset(64 + 15);
+        make.size.mas_equalTo(CGSizeMake(self.view.frame.size.width - 30, 30));
+    }];
+    
+    self.cardView = [JACardView cardViewWithFrame:CGRectZero responseData:self.titles];
+    self.cardView.backgroundColor = [UIColor clearColor];
+    self.cardView.dataSource = self;
+    self.cardView.delegate = self;
+    self.cardView.showsVerticalScrollIndicator = NO;
+    self.cardView.showHeaderView = YES;
+    self.cardView.showRightSettingView = YES;
+    self.cardView.showTitleHorizontalLine = YES;
+    self.cardView.subTitleSuffix = @"：";
+    self.cardView.autoFilterTransferredMeaningCharacterInSubTitle = YES;
+    [self.view addSubview:self.cardView];
+    [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(segment.mas_bottom).with.offset(10);
+        make.left.right.bottom.equalTo(self.view);
+    }];
 }
 
 

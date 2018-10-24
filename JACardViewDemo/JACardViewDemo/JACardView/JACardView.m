@@ -169,17 +169,17 @@ static NSString *const kJACard = @"kJACard";
         [self.delegate cardView:self titleLab:titleLab atIndex:indexPath.row];
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:subTitleLab:atHeaderInfosIndex:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:subTitleLab:atSubTitlesIndex:)]) {
         for (NSInteger i=0; i<cardCell.subTitleLabs.count; i++) {
             UILabel *subTitleLab = [cardCell.subTitleLabs objectAtIndex:i];
-            [self.delegate cardView:self subTitleLab:subTitleLab atHeaderInfosIndex:i];
+            [self.delegate cardView:self subTitleLab:subTitleLab atSubTitlesIndex:i];
         }
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:contentLab:atHeaderInfosIndex:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cardView:contentLab:atSubTitlesIndex:)]) {
         for (NSInteger i=0; i<cardCell.subContentLabs.count; i++) {
             UILabel *contentLab = [cardCell.subContentLabs objectAtIndex:i];
-            [self.delegate cardView:self contentLab:contentLab atHeaderInfosIndex:i];
+            [self.delegate cardView:self contentLab:contentLab atSubTitlesIndex:i];
         }
     }
 }
@@ -275,23 +275,17 @@ static NSString *const kJACard = @"kJACard";
 
 - (void)setShowHeaderView:(BOOL)showHeaderView {
     _showHeaderView = showHeaderView;
-    if (_showHeaderView) {
-        [_tableView reloadData];
-    }
+    [_tableView reloadData];
 }
 
 - (void)setShowRightSettingView:(BOOL)showRightSettingView {
     _showRightSettingView = showRightSettingView;
-    if (_showRightSettingView) {
-        [_tableView reloadData];
-    }
+    [_tableView reloadData];
 }
 
 - (void)setShowTitleHorizontalLine:(BOOL)showTitleHorizontalLine {
     _showTitleHorizontalLine = showTitleHorizontalLine;
-    if (_showTitleHorizontalLine) {
-        [_tableView reloadData];
-    }
+    [_tableView reloadData];
 }
 
 - (void)setShowsVerticalScrollIndicator:(BOOL)showsVerticalScrollIndicator {
@@ -347,7 +341,7 @@ static NSString *const kJACard = @"kJACard";
 }
 
 #pragma mark - Getter
-- (NSArray*)headerInfos {
+- (NSArray*)subTitles {
     return self.dataSource.subTitlesOfCardView;
 }
 

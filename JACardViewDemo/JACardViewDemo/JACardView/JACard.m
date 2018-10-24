@@ -315,6 +315,14 @@
 - (void)setShowHeaderView:(BOOL)showHeaderView {
     _showHeaderView = showHeaderView;
     self.headView.hidden = !showHeaderView;
+    if (self.headView.hidden) {
+        [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.titleView).with.offset(15);
+            make.right.equalTo(self.rightCustomView.mas_left).with.offset(-10);
+            make.top.equalTo(self.titleView).with.offset(15);
+            make.height.mas_equalTo(20);
+        }];
+    }
 }
 
 - (void)setShowRightSettingView:(BOOL)showRightSettingView {
