@@ -10,12 +10,13 @@
 #import "JACardView.h"
 #import "JAUtilities.h"
 #import "Masonry.h"
+#import "MJRefresh.h"
 
 @interface ViewController ()<JACardViewDataSource,JACardViewDelegate>
 
 @property (nonatomic,strong) JACardView *cardView;
 
-@property (nonatomic,strong) NSArray *titles;
+@property (nonatomic,strong) NSMutableArray *titles;
 @property (nonatomic,strong) NSArray *subTitles;
 @property (nonatomic,strong) NSArray *contents;
 
@@ -29,11 +30,13 @@
     self.title = @"CardViewDemo";
     self.view.backgroundColor = UIColorFromHexStr(@"#F1F0F1");
     
-    self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490",@"易方达消费类型A 312442",@"广发理财30天债券B 100034",@"安信宝利债券(LOF) 287001",@"嘉和磐石混合C 900031",@"中银景福回报混合 0005274"];
+    self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490",@"易方达消费类型A 312442",@"广发理财30天债券B 100034",@"安信宝利债券(LOF) 287001",@"嘉和磐石混合C 900031",@"中银景福回报混合 0005274"].mutableCopy;
     self.subTitles = @[@"基金帐号",@"基金份额",@"可用份额",@"最新市值",@"基金市值",@"成本价格",@"浮动盈亏",@"交易冻结",@"长期冻结",@"基金状态",@"基金净值",@"基金公司代码",@"客户号",@"基金公司",@"收费类型",@"收费名称"];
     self.contents = @[@"0N1100829511",@"50000000.00",@"3000000.00",@"478143.43",@"3000234.89",@"353.43",@"-1341133124.13",@"1000.00",@"0.00",@"正常开放",@"311431412.00",@"0009431",@"1441314630043",@"阿里基金",@"01",@"前端收费"];
     
     [self initSubViews];
+    [self addCardViewRefreshHeader];
+    [self addCardViewRefreshFooter];
 }
 
 #pragma mark - JACardViewDataSource
@@ -153,6 +156,55 @@
     }
 }
 
+#pragma mark - Refresh
+- (void)addCardViewRefreshHeader {
+    
+    __weak __typeof(self) weakSelf = self;
+    self.cardView.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        
+        [weakSelf.titles removeAllObjects];
+        [weakSelf.titles addObjectsFromArray:@[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490",@"易方达消费类型A 312442",@"广发理财30天债券B 100034",@"安信宝利债券(LOF) 287001",@"嘉和磐石混合C 900031",@"中银景福回报混合 0005274"]];
+        
+        weakSelf.cardView.cardsCount = self.titles.count;
+        
+        //1.5s后刷新cardView
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            [weakSelf.cardView reloadCardView];
+            [weakSelf.cardView.tableView.mj_header endRefreshing];
+        });
+    }];
+}
+
+- (void)addCardViewRefreshFooter {
+    
+    __weak __typeof(self) weakSelf = self;
+    self.cardView.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        
+        static int countNum = 1;
+        NSMutableArray *refreshObjs = @[].mutableCopy;
+        for (NSInteger i=0; i<5; i++) {
+            NSString *obj = [NSString stringWithFormat:@"RefreshFooterObj %d",countNum];
+            [refreshObjs addObject:obj];
+            
+            countNum ++;
+        }
+        
+        [weakSelf.titles addObjectsFromArray:refreshObjs];
+        weakSelf.cardView.cardsCount = self.titles.count;
+
+        //1.5s后刷新cardView
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+           
+            [weakSelf.cardView reloadCardView];
+            [weakSelf.cardView.tableView.mj_footer endRefreshing];
+        });
+        
+    }];
+    
+}
+
+#pragma mark - Actions
 - (void)segmentAction:(UISegmentedControl*)seg {
     switch (seg.selectedSegmentIndex) {
         case 0:{
@@ -190,6 +242,7 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+#pragma mark - Private
 - (void)initSubViews {
     
     UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
