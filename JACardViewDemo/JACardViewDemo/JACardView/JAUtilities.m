@@ -50,4 +50,39 @@
     return [UIColor colorWithRed:((float)r / 255.0f) green:((float)g / 255.0f) blue:((float)b / 255.0f) alpha:1.0f];
 }
 
++ (BOOL)isIPhoneXOrAfter {
+    if (__IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_11_0) {
+        return NO;
+    }
+    CGFloat iPhoneNotchDirectionSafeAreaInsets = 0;
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets = [UIApplication sharedApplication].windows[0].safeAreaInsets;
+        switch ([UIApplication sharedApplication].statusBarOrientation) {
+            case UIInterfaceOrientationPortrait:{
+                iPhoneNotchDirectionSafeAreaInsets = safeAreaInsets.top;
+            }
+                break;
+            case UIInterfaceOrientationLandscapeLeft:{
+                iPhoneNotchDirectionSafeAreaInsets = safeAreaInsets.left;
+            }
+                break;
+            case UIInterfaceOrientationLandscapeRight:{
+                iPhoneNotchDirectionSafeAreaInsets = safeAreaInsets.right;
+            }
+                break;
+            case UIInterfaceOrientationPortraitUpsideDown:{
+                iPhoneNotchDirectionSafeAreaInsets = safeAreaInsets.bottom;
+            }
+                break;
+            default:
+                iPhoneNotchDirectionSafeAreaInsets = safeAreaInsets.top;
+                break;
+        }
+    } else {
+        return NO;
+    }
+    
+    return iPhoneNotchDirectionSafeAreaInsets > 20;
+}
+
 @end

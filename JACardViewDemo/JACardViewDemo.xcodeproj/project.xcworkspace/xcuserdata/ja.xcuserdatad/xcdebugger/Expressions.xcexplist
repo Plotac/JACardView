@@ -10,5 +10,13 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "-[JACardView tableView:cellForRowAtIndexPath:]:JACardView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.maxExhibitionLineCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

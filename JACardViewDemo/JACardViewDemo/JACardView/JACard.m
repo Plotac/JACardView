@@ -321,6 +321,11 @@
     
     for (NSInteger i=0; i<self.subContentLabs.count; i++) {
         UILabel *lab = [self.subContentLabs objectAtIndex:i];
+        
+        if (i > _subContents.count - 1) {
+            lab.text = @"--";
+            continue;
+        }
         NSString *content = [_subContents objectAtIndex:i];
         lab.text = content.length > 0 ? content : @"--";
     }

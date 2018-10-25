@@ -23,13 +23,13 @@
 
 /*
  * 子标题设置
- *
  */
 - (NSArray*)subTitlesOfCardView;
 
 /*
  * 内容设置
  *
+ * 数组数量需与子标题数组数量一致。若超出，超出部分不显示；若少于，少于的部分显示为--
  */
 - (NSArray*)contentsOfCardView;
 
@@ -99,6 +99,23 @@
  * @param contentLab   子标题内容lab
  * @param index        contentLab在cardView.subTitles中的index
  *
+ * e.g. 设置“浮动盈亏”字段的内容颜色
+ 
+- (void)cardView:(JACardView *)cardView contentLab:(UILabel *)contentLab atSubTitlesIndex:(NSInteger)index {
+    NSString *subTitle = [self.cardView.subTitles objectAtIndex:index];
+    if ([subTitle isEqualToString:@"浮动盈亏"]) {
+        NSString *content = contentLab.text;
+        if ([content doubleValue] > 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#F33939");
+        }else if ([content doubleValue] < 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#00B44B");
+        }else {
+            contentLab.textColor = UIColorFromHexStr(@"#333333");
+        }
+    }
+}
+ 
+ *
  */
 - (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
 
@@ -113,7 +130,6 @@
 
 /*
  * cardView初始化方法
- *
  */
 - (instancetype)initCardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
@@ -121,12 +137,11 @@
 
 /*
  * JACardView卡片数量
- *
  */
 @property (nonatomic,assign) NSInteger cardsCount;
 
 /*
- * 当前选中行
+ * 当前选中的index
  *
  * 获取选中的行数的数据: [cardView.responseData objectAtIndex:cardView.selectedIndex]
  */

@@ -195,7 +195,7 @@ static NSString *const kJACard = @"kJACard";
         CGFloat height = [self.delegate cardView:self heightForToolBarViewWithCardOpened:status atIndex:indexPath.row];
         toolBarHeight = height == 0 ? height : height + 20;
     }
-    
+
     if (status) {
         return 15 + 20 + 20 + self.maxExhibitionLineCount *30 + 10 + toolBarHeight + 10 + self.interval;
     }
@@ -237,8 +237,8 @@ static NSString *const kJACard = @"kJACard";
         _noDataView.hidden = YES;
     }
     
-    if (self.dataSource.subTitlesOfCardView.count != 0) {
-        _maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
+    if (self.maxExhibitionLineCount == 0) {
+        self.maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
     }
     
     if (!_cardStatus) {
@@ -263,7 +263,7 @@ static NSString *const kJACard = @"kJACard";
 
 - (void)setMaxExhibitionLineCount:(NSInteger)maxExhibitionLineCount {
     _maxExhibitionLineCount = maxExhibitionLineCount;
-    if (_maxExhibitionLineCount != _cardsCount / 2) {
+    if (_maxExhibitionLineCount != ceil(self.dataSource.subTitlesOfCardView.count / 2)) {
         [_tableView reloadData];
     }
 }

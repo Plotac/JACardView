@@ -35,6 +35,7 @@
     self.contents = @[@"0N1100829511",@"50000000.00",@"3000000.00",@"478143.43",@"3000234.89",@"353.43",@"-1341133124.13",@"1000.00",@"0.00",@"正常开放",@"311431412.00",@"0009431",@"1441314630043",@"阿里基金",@"01",@"前端收费"];
     
     [self initSubViews];
+    
     [self addCardViewRefreshHeader];
     [self addCardViewRefreshFooter];
 }
@@ -248,9 +249,10 @@
     UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
     [self.view addSubview:segment];
     [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+
     [segment mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).with.offset(15);
-        make.top.equalTo(self.view).with.offset(64 + 15);
+        make.top.equalTo(self.view).with.offset(kStatusBarHeight + kNavToolBarHeight + 15);
         make.size.mas_equalTo(CGSizeMake(self.view.frame.size.width - 30, 30));
     }];
     
@@ -261,14 +263,16 @@
     self.cardView.showRightSettingView = YES;
     self.cardView.showTitleHorizontalLine = YES;
     self.cardView.subTitleSuffix = @"：";
-    self.cardView.cardsCount = self.titles.count;
     self.cardView.autoFilterTransferredMeaningCharacterInSubTitle = YES;
     [self.view addSubview:self.cardView];
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(segment.mas_bottom).with.offset(10);
         make.left.right.bottom.equalTo(self.view);
     }];
+    /*
+     cardsCount属性 在开发中，最好在请求完数据之后设置
+     */
+    self.cardView.cardsCount = self.titles.count;
 }
-
 
 @end
