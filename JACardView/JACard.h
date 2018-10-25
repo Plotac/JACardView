@@ -1,22 +1,22 @@
 //
-//  WTTradeNewCardCell.h
-//  IPhone2018
+//  JACard.h
+//  JACardViewDemo
 //
-//  Created by Ja on 2018/9/13.
-//  Copyright © 2018年 gw. All rights reserved.
+//  Created by Ja on 2018/10/24.
+//  Copyright © 2018年 Ja. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface WTTradeNewCardCell : UITableViewCell
+@interface JACard : UITableViewCell
 
-@property (nonatomic,retain) id title;
+@property (nonatomic,strong) id title;
 
-@property (nonatomic,retain) UILabel *titleLab;
+@property (nonatomic,strong) UILabel *titleLab;
 
-@property (nonatomic,retain) NSArray *subTitles;
+@property (nonatomic,strong) NSArray *subTitles;
 
-@property (nonatomic,retain) NSArray *subContents;
+@property (nonatomic,strong) NSArray *subContents;
 
 @property (nonatomic,assign) CGFloat theDistanceBetweenSubTitleAndSubTitleContent;
 
@@ -25,6 +25,10 @@
 @property (nonatomic,copy) NSString *subTitleSuffix;
 
 @property (nonatomic,copy) NSString *titleViewColorString;
+
+@property (nonatomic,copy) NSString *subTitleColorString;
+
+@property (nonatomic,copy) NSString *contentColorString;
 
 @property (nonatomic,assign) NSInteger visibleExhibitionLineCount;
 
@@ -42,10 +46,10 @@
 
 @property (nonatomic,retain) UIButton *moreBtn;
 
-//存放子标题的数组
+//存放子标题的lab数组
 @property (nonatomic,retain) NSMutableArray *subTitleLabs;
 
-//存放子标题内容的数组
+//存放子标题内容的lab数组
 @property (nonatomic,retain) NSMutableArray *subContentLabs;
 
 - (void)setHeadViewAndUpdateConstraints:(UIView*)inputView;

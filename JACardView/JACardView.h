@@ -1,55 +1,64 @@
 //
-//  WTTradeNewCardView.h
-//  IPhone2018
+//  JACardView.h
+//  JACardViewDemo
 //
-//  卡片视图
+//  Created by Ja on 2018/10/24.
+//  Copyright © 2018年 Ja. All rights reserved.
 //
-//  Created by Ja on 2018/9/13.
-//  Copyright © 2018年 gw. All rights reserved.
-//
-
 
 #import <UIKit/UIKit.h>
 
-@class WTTradeNewCardView;
+@class JACardView;
 
-@protocol WTTradeNewCardViewDelegate <NSObject>
+@protocol JACardViewDataSource <NSObject>
 
 @required
+
 /*
  * 标题设置
  *
- * 标题较特殊，单独返回处理，可返回NSAttributedString类型数组
+ * 可返回NSAttributedString类型数组
  */
 - (NSArray*)titlesOfCardView;
 
 /*
- * 根据返回的活字典数据设置子标题
+ * 子标题设置
  *
- * 如果活字典中的某些字段不需要显示，那么需要在外部处理
  */
-- (NSArray<TableHeaderInfo*>*)headerInfoForSubTitlesOfCardView;
+- (NSArray*)subTitlesOfCardView;
+
+/*
+ * 内容设置
+ *
+ */
+- (NSArray*)contentsOfCardView;
+
+@end
+
+@protocol JACardViewDelegate <NSObject>
 
 @optional
 /*
  * 设置标题左侧的headerView
  *
  */
-- (UIView*)cardView:(WTTradeNewCardView*)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index;
 
 /*
  * 设置标题右侧的自定义View
  *
  */
-- (UIView*)cardView:(WTTradeNewCardView*)cardView viewForRightSettingViewAtIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForRightSettingViewAtIndex:(NSInteger)index;
 
 /*
  * 设置工具栏自定义View
  *
- * 使用此方法时，需使用- (CGFloat)cardView:(WTTradeNewCardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus indexPath:(NSInteger)index设置高度
+ * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+ *
+ * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
  *
  */
-- (UIView*)cardView:(WTTradeNewCardView*)cardView viewForToolBarViewAtIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
 
 /*
  * 设置工具栏自定义View的高度
@@ -57,13 +66,13 @@
  * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
  *
  */
-- (CGFloat)cardView:(WTTradeNewCardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus indexPath:(NSInteger)index;
+- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
 
 /*
  * 点击cell触发的方法
  *
  */
-- (void)cardView:(WTTradeNewCardView*)cardView didSelectRowAtIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView didSelectRowAtIndex:(NSInteger)index;
 
 /*
  * 修改某一条标题label的相关属性
@@ -72,42 +81,26 @@
  * @param index        titleLab在cardView中的index
  *
  */
-- (void)cardView:(WTTradeNewCardView*)cardView titleLab:(UILabel*)titleLab atIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView titleLab:(UILabel*)titleLab atIndex:(NSInteger)index;
 
 /*
  * 修改某一条子标题label的相关属性
  *
  * @param subTitleLab  子标题lab
- * @param index        subTitleLab在cardView.headerInfos中的index
+ * @param index        subTitleLab在cardView.subTitles中的index
  *
  * e.g. 见 cardView:contentLab:atHeaderInfosIndex:
  */
-- (void)cardView:(WTTradeNewCardView*)cardView subTitleLab:(UILabel*)subTitleLab atHeaderInfosIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView subTitleLab:(UILabel*)subTitleLab atSubTitlesIndex:(NSInteger)index;
 
 /*
  * 修改某一条子标题内容label的相关属性
  *
  * @param contentLab   子标题内容lab
- * @param index        contentLab在cardView.headerInfos中的index
+ * @param index        contentLab在cardView.subTitles中的index
  *
- 
- e.g. 修改 1064字段 - 浮动盈亏 字体颜色
-- (void)cardView:(WTTradeNewCardView *)cardView contentLab:(UILabel *)contentLab atHeaderInfosIndex:(NSInteger)index {
- 
-    TableHeaderInfo *headerInfo = [self.cardView.headerInfos objectAtIndex:index];
-    if ([headerInfo.columnFieldTitle isEqualToString:@"浮动盈亏"] && [headerInfo.columnFieldKey isEqualToString:@"1064"]) {
-        NSString *content = contentLab.text;
-        if ([content doubleValue] > 0) {
-            contentLab.textColor = UIColorFromHexStr(@"#F33939");
-        }else if ([content doubleValue] < 0) {
-            contentLab.textColor = UIColorFromHexStr(@"#00B44B");
-        }else {
-            contentLab.textColor = UIColorFromHexStr(@"#333333");
-        }
-    }
-}
  */
-- (void)cardView:(WTTradeNewCardView*)cardView contentLab:(UILabel*)contentLab atHeaderInfosIndex:(NSInteger)index;
+- (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
 
 @end
 
@@ -116,23 +109,21 @@
 
 
 
-@interface WTTradeNewCardView : UIView
+@interface JACardView : UIView
 
 /*
  * cardView初始化方法
  *
- * responseData   服务端下发的原始数据数组
  */
-- (instancetype)initCardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData;
+- (instancetype)initCardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
-+ (instancetype)cardViewWithFrame:(CGRect)frame responseData:(NSArray*)responseData;
++ (instancetype)cardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
 /*
- * WTTradeNewCardView数据源
+ * JACardView卡片数量
  *
- * 服务端下发的原始数据数组
  */
-@property (nonatomic,retain) NSMutableArray *responseData;
+@property (nonatomic,assign) NSInteger cardsCount;
 
 /*
  * 当前选中行
@@ -142,16 +133,24 @@
 @property (nonatomic,assign) NSInteger selectedIndex;
 
 /*
- * WTTradeNewCardView子标题活字典数组
- *
+ * JACardView子标题数组
  */
-@property (nonatomic,retain,readonly) NSArray <TableHeaderInfo*>*headerInfos;
+@property (nonatomic,strong,readonly) NSArray *subTitles;
 
 /*
- * WTTradeNewCardView 代理
- *
+ * JACardView 数据源
  */
-@property (nonatomic,weak) id<WTTradeNewCardViewDelegate> delegate;
+@property (nonatomic,weak) id<JACardViewDataSource> dataSource;
+
+/*
+ * JACardView 代理
+ */
+@property (nonatomic,weak) id<JACardViewDelegate> delegate;
+
+/*
+ * JACardView中的tableView
+ */
+@property (nonatomic,strong) UITableView *tableView;
 
 /*
  * 默认显示几行数据
@@ -163,7 +162,7 @@
 /*
  * 最多显示几行数据
  *
- * 默认显示 返回的活字典数据数量 / 2 行(向上取整)
+ * 默认显示 返回的子标题数量 / 2 行(向上取整)
  */
 @property (nonatomic,assign) NSInteger maxExhibitionLineCount;
 
@@ -206,6 +205,22 @@
  * 默认白色(#FFFFFF)
  */
 @property (nonatomic,copy) NSString *titleViewColorString;
+
+/*
+ * 修改子标题字体颜色
+ * 十六进制颜色值
+ *
+ * 默认#6478B5
+ */
+@property (nonatomic,copy) NSString *subTitleColorString;
+
+/*
+ * 修改内容字体颜色
+ * 十六进制颜色值
+ *
+ * 默认#333333
+ */
+@property (nonatomic,copy) NSString *contentColorString;
 
 /*
  * 是否显示标题左侧View
@@ -260,31 +275,6 @@
 @property (nonatomic,assign) BOOL autoFilterTransferredMeaningCharacterInContent;
 
 /*
- * 上拉加载
- */
-- (void)addUpToLoadingWithActionHandler:(void(^)(UITableView *tableView))block;
-
-/*
- * 下拉刷新
- */
-- (void)addPullToRefreshWithActionHandler:(void(^)(UITableView *tableView))block refreshType:(RefreshViewType)type;
-
-/*
- * 结束加载/刷新
- */
-- (void)endPullToRefreshOrUpToLoading;
-
-/*
- * 移除下拉刷新
- */
-- (void)removeCardViewPullToRefreshHeader;
-
-/*
- * 移除上拉加载
- */
-- (void)removeCardViewUpToLoadingFooter;
-
-/*
  * 重置某一卡片的显示状态
  *
  * 重置后的状态在界面上显示为未打开
@@ -308,5 +298,5 @@
  */
 - (void)scrollCardViewToTopWithAnimation:(BOOL)animated;
 
-@end
 
+@end
