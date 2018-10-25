@@ -29,9 +29,9 @@
     self.title = @"CardViewDemo";
     self.view.backgroundColor = UIColorFromHexStr(@"#F1F0F1");
     
-    self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490"];
+    self.titles = @[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490",@"易方达消费类型A 312442",@"广发理财30天债券B 100034",@"安信宝利债券(LOF) 287001",@"嘉和磐石混合C 900031",@"中银景福回报混合 0005274"];
     self.subTitles = @[@"基金帐号",@"基金份额",@"可用份额",@"最新市值",@"基金市值",@"成本价格",@"浮动盈亏",@"交易冻结",@"长期冻结",@"基金状态",@"基金净值",@"基金公司代码",@"客户号",@"基金公司",@"收费类型",@"收费名称"];
-    self.contents = @[@"0N1100829511",@"50000000.00",@"3000000.00",@"478143.43",@"3000234.89",@"353.43",@"-1341133124.13",@"1000.00",@"0.00",@"正常开放",@"311431412.00",@"0009431",@"1441314630043",@"噜噜噜基金",@"01",@"前端收费"];
+    self.contents = @[@"0N1100829511",@"50000000.00",@"3000000.00",@"478143.43",@"3000234.89",@"353.43",@"-1341133124.13",@"1000.00",@"0.00",@"正常开放",@"311431412.00",@"0009431",@"1441314630043",@"阿里基金",@"01",@"前端收费"];
     
     [self initSubViews];
 }
@@ -71,7 +71,7 @@
 #pragma mark - JACardViewDelegate
 - (UIView*)cardView:(JACardView *)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index {
     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 19, 19)];
-    imgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%d",arc4random()%6 + 1]];
+    imgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%d",(int)index%6 + 1]];
     return imgView;
 }
 

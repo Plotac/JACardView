@@ -273,31 +273,6 @@
 @property (nonatomic,assign) BOOL autoFilterTransferredMeaningCharacterInContent;
 
 /*
- * 上拉加载
- */
-- (void)addUpToLoadingWithActionHandler:(void(^)(UITableView *tableView))block;
-
-/*
- * 下拉刷新
- */
-- (void)addPullToRefreshWithActionHandler:(void(^)(UITableView *tableView))block;
-
-/*
- * 结束加载/刷新
- */
-- (void)endPullToRefreshOrUpToLoading;
-
-/*
- * 移除下拉刷新
- */
-- (void)removeCardViewPullToRefreshHeader;
-
-/*
- * 移除上拉加载
- */
-- (void)removeCardViewUpToLoadingFooter;
-
-/*
  * 重置某一卡片的显示状态
  *
  * 重置后的状态在界面上显示为未打开
