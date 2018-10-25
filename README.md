@@ -166,6 +166,7 @@
 * 自定义默认显示行数
 ```objc
 /*
+*
 * 默认2行
 */
 @property (nonatomic,assign) NSInteger defaultExhibitionLineCount;
@@ -173,7 +174,7 @@
 * 自定义最多显示行数
 ```objc
 /*
-* 最多显示几行数据
+* 
 * 默认显示 cardsCount / 2 行(向上取整)
 */
 @property (nonatomic,assign) NSInteger maxExhibitionLineCount;
@@ -196,4 +197,106 @@
 * 该值越大，两者距离越宽
 */
 @property (nonatomic,assign) CGFloat theDistanceBetweenSubTitleAndSubTitleContent;
+```
+* 卡片之间的间隔
+```objc
+/*
+*
+* 默认15
+*/
+@property (nonatomic,assign) CGFloat interval;
+```
+* 子标题后缀
+```objc
+/*
+*
+* 默认无后缀
+*/
+@property (nonatomic,copy) NSString *subTitleSuffix;
+```
+* 修改标题下方横线以上的View的背景颜色
+```objc
+/*
+* 十六进制颜色值
+*
+* 默认白色(#FFFFFF)
+*/
+@property (nonatomic,copy) NSString *titleViewColorString;
+```
+* 修改子标题字体颜色
+```objc
+/*
+* 十六进制颜色值
+*
+* 默认#6478B5
+*/
+@property (nonatomic,copy) NSString *subTitleColorString;
+```
+* 修改内容字体颜色
+```objc
+/*
+* 十六进制颜色值
+*
+* 默认#333333
+*/
+@property (nonatomic,copy) NSString *contentColorString;
+```
+* 是否显示标题左侧View
+```objc
+/*
+*
+* 默认NO 不显示
+*/
+@property (nonatomic,assign) BOOL showHeaderView;
+```
+* 是否显示右侧自定义View
+```objc
+/*
+*
+* 默认NO 不显示
+*/
+@property (nonatomic,assign) BOOL showRightSettingView;
+```
+* 是否显示标题下方横线
+```objc
+/*
+*
+* 默认NO 不显示
+*/
+@property (nonatomic,assign) BOOL showTitleHorizontalLine;
+```
+* 是否显示滚动进度条
+```objc
+/*
+*
+* 默认YES 显示
+*/
+@property (nonatomic,assign) BOOL showsVerticalScrollIndicator;
+```
+* 是否可以滚动
+```objc
+/*
+*
+* 默认YES 可滚动
+*/
+@property (nonatomic,assign) BOOL scrollEnabled;
+```
+* 是否自动去除子标题文本中的转义字符
+```objc
+/*
+*
+* 目前包含的可去除的转义字符: \n , \a , \t , \v , \\ , \" , \'
+* 与 autoFilterTransferredMeaningCharacterInContent 属性相同
+*
+* 默认NO 不去除
+*/
+@property (nonatomic,assign) BOOL autoFilterTransferredMeaningCharacterInSubTitle;
+```
+* 是否自动去除内容文本中的转义字符
+```objc
+/*
+*
+* 默认NO 不去除
+*/
+@property (nonatomic,assign) BOOL autoFilterTransferredMeaningCharacterInContent;
 ```
