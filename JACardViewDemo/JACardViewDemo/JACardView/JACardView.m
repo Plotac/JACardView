@@ -34,8 +34,6 @@ static NSString *const kJACard = @"kJACard";
 
 @property (nonatomic,strong) NSMutableArray *cardStatus;
 
-@property (nonatomic,strong) UITableView *tableView;
-
 @property (nonatomic,strong) UIView *noDataView;
 
 @end

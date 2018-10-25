@@ -134,21 +134,23 @@
 
 /*
  * JACardView子标题数组
- *
  */
 @property (nonatomic,strong,readonly) NSArray *subTitles;
 
 /*
  * JACardView 数据源
- *
  */
 @property (nonatomic,weak) id<JACardViewDataSource> dataSource;
 
 /*
  * JACardView 代理
- *
  */
 @property (nonatomic,weak) id<JACardViewDelegate> delegate;
+
+/*
+ * JACardView中的tableView
+ */
+@property (nonatomic,strong) UITableView *tableView;
 
 /*
  * 默认显示几行数据
