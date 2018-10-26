@@ -240,7 +240,7 @@
 }
 
 - (void)rightBtnAction:(UIButton*)sender {
-    NSLog(@"RightButton ClickedIndex : %d",(int)sender.tag - 500);
+    NSLog(@"RightButton ClickedIndex : %d",(int)sender.tag - 100);
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"RightButton Action" message:[NSString stringWithFormat:@"CardIndex:%d",(int)sender.tag - 100] preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
