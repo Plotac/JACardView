@@ -181,10 +181,10 @@
         
         //1.5s后刷新cardView
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
             [weakSelf.cardView reloadCardView];
             [weakSelf.cardView.tableView.mj_header endRefreshing];
         });
+        
     }];
 }
 
@@ -207,7 +207,6 @@
 
         //1.5s后刷新cardView
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-           
             [weakSelf.cardView reloadCardView];
             [weakSelf.cardView.tableView.mj_footer endRefreshing];
         });

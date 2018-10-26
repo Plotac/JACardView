@@ -346,4 +346,54 @@
 - (void)scrollCardViewToTopWithAnimation:(BOOL)animated;
 ```
 ## 数据刷新
-### [Demo](https://github.com/Plotac/JACardView/tree/master/JACardViewDemo)
+### JACardViewDemo中使用[MJRefresh](https://github.com/CoderMJLee/MJRefresh)模拟数据刷新操作
+* 上拉加载
+```objc
+- (void)addCardViewRefreshHeader {
+
+    __weak __typeof(self) weakSelf = self;
+    self.cardView.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+
+        [weakSelf.titles removeAllObjects];
+        [weakSelf.titles addObjectsFromArray:@[@"银华核心价值优选 500123",@"国开货币基金A 320031",@"富国低碳环保混合 512399",@"平安大华财富宝货 000412",@"鹏扬汇利债券B 680032",@"中融现金增利货币 234490",@"易方达消费类型A 312442",@"广发理财30天债券B 100034",@"安信宝利债券(LOF) 287001",@"嘉和磐石混合C 900031",@"中银景福回报混合 0005274"]];
+
+        weakSelf.cardView.cardsCount = self.titles.count;
+
+        //1.5s后刷新cardView
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(),^{
+            [weakSelf.cardView reloadCardView];
+            [weakSelf.cardView.tableView.mj_header endRefreshing];
+        });
+        
+    }];
+}
+```
+* 下拉刷新
+```objc
+- (void)addCardViewRefreshFooter {
+
+    __weak __typeof(self) weakSelf = self;
+    self.cardView.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+
+        static int countNum = 1;
+        NSMutableArray *refreshObjs = @[].mutableCopy;
+        for (NSInteger i=0; i<5; i++) {
+            NSString *obj = [NSString stringWithFormat:@"RefreshFooterObj %d",countNum];
+            [refreshObjs addObject:obj];
+
+            countNum ++;
+        }
+
+        [weakSelf.titles addObjectsFromArray:refreshObjs];
+        weakSelf.cardView.cardsCount = self.titles.count;
+
+        //1.5s后刷新cardView
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf.cardView reloadCardView];
+            [weakSelf.cardView.tableView.mj_footer endRefreshing];
+        });
+        
+    }];
+   
+}
+```
