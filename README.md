@@ -45,6 +45,10 @@
 
 4. 实现JACardViewDataSource (必须)
 ```objc
+@protocol JACardViewDataSource <NSObject>
+
+@required
+
 /*
 * 标题设置
 *
@@ -63,9 +67,14 @@
 * 数组数量需与子标题数组数量一致。若超出，超出部分不显示；若少于，少于的部分显示为 --
 */
 - (NSArray*)contentsOfCardView;
+
+@end
 ```
 5. 根据需求实现JACardViewDelegate (可选)
 ```objc
+@protocol JACardViewDelegate <NSObject>
+
+@optional
 
 /*
 * 设置JACardView的headerView
@@ -157,6 +166,8 @@
 *
 */
 - (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
+
+@end
 ```
 ## 属性
 * 卡片显示数量 
