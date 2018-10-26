@@ -344,7 +344,7 @@
 - (void)scrollCardViewToTopWithAnimation:(BOOL)animated;
 ```
 ## 数据刷新
-### JACardViewDemo中使用[MJRefresh](https://github.com/CoderMJLee/MJRefresh)模拟数据刷新操作
+#### JACardViewDemo中使用[MJRefresh](https://github.com/CoderMJLee/MJRefresh)模拟数据刷新操作
 * 上拉加载
 ```objc
 - (void)addCardViewRefreshHeader {
