@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JACard.h"
 
 @class JACardView;
 
@@ -23,13 +24,13 @@
 
 /*
  * 子标题设置
- *
  */
 - (NSArray*)subTitlesOfCardView;
 
 /*
  * 内容设置
  *
+ * 数组数量需与子标题数组数量一致。若超出，超出部分不显示；若少于，少于的部分显示为--
  */
 - (NSArray*)contentsOfCardView;
 
@@ -38,35 +39,44 @@
 @protocol JACardViewDelegate <NSObject>
 
 @optional
+
+/*
+ * 设置JACardView的headerView
+ */
+- (UIView*)headerViewForCardView;
+
+/*
+ * 设置JACardView的headerView的高度
+ */
+- (CGFloat)heightForHeaderViewOfCardView;
+
 /*
  * 设置标题左侧的headerView
- *
  */
 - (UIView*)cardView:(JACardView*)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index;
 
 /*
  * 设置标题右侧的自定义View
- *
  */
 - (UIView*)cardView:(JACardView*)cardView viewForRightSettingViewAtIndex:(NSInteger)index;
 
 /*
  * 设置工具栏自定义View
  *
- * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+ * @param  opened 当前卡片状态   YES:打开 NO:收起
  *
- * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
+ * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index设置对应高度
  *
  */
-- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
  * 设置工具栏自定义View的高度
  *
- * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+ * @param  opened 当前卡片状态   YES:打开 NO:收起
  *
  */
-- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
  * 点击cell触发的方法
@@ -99,6 +109,22 @@
  * @param contentLab   子标题内容lab
  * @param index        contentLab在cardView.subTitles中的index
  *
+ * e.g. 设置“浮动盈亏”字段的内容颜色
+ 
+- (void)cardView:(JACardView *)cardView contentLab:(UILabel *)contentLab atSubTitlesIndex:(NSInteger)index {
+    NSString *subTitle = [self.cardView.subTitles objectAtIndex:index];
+    if ([subTitle isEqualToString:@"浮动盈亏"]) {
+        NSString *content = contentLab.text;
+        if ([content doubleValue] > 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#F33939");
+        }else if ([content doubleValue] < 0) {
+            contentLab.textColor = UIColorFromHexStr(@"#00B44B");
+        }else {
+            contentLab.textColor = UIColorFromHexStr(@"#333333");
+        }
+    }
+}
+
  */
 - (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
 
@@ -113,7 +139,6 @@
 
 /*
  * cardView初始化方法
- *
  */
 - (instancetype)initCardViewWithFrame:(CGRect)frame dataSource:(id<JACardViewDataSource>)dataSource delegate:(id<JACardViewDelegate>)delegate;
 
@@ -121,14 +146,12 @@
 
 /*
  * JACardView卡片数量
- *
  */
 @property (nonatomic,assign) NSInteger cardsCount;
 
 /*
- * 当前选中行
+ * 当前选中的index
  *
- * 获取选中的行数的数据: [cardView.responseData objectAtIndex:cardView.selectedIndex]
  */
 @property (nonatomic,assign) NSInteger selectedIndex;
 
@@ -227,7 +250,7 @@
  *
  * 默认NO 不显示
  */
-@property (nonatomic,assign) BOOL showHeaderView;
+@property (nonatomic,assign) BOOL showLeftTitleView;
 
 /*
  * 是否显示右侧自定义View

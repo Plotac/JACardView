@@ -23,7 +23,6 @@
 
 #import "JACardView.h"
 #import "Masonry.h"
-#import "JACard.h"
 #import "JAUtilities.h"
 
 static NSString *const kJACard = @"kJACard";
@@ -31,6 +30,8 @@ static NSString *const kJACard = @"kJACard";
 #define kDefaultExhibitionLineCount      2
 
 @interface JACardView ()<UITableViewDataSource,UITableViewDelegate>
+
+@property (nonatomic,strong) UIView *headerBackgroundView;
 
 @property (nonatomic,strong) NSMutableArray *cardStatus;
 
@@ -45,14 +46,13 @@ static NSString *const kJACard = @"kJACard";
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.dataSource = dataSource;
-        self.delegate = delegate;
+        [self initSubViews];
         
         self.defaultExhibitionLineCount = kDefaultExhibitionLineCount;
         self.maxExhibitionLineCount = 0;
         self.theSecondColumnDistanceFromCenterX = 20;
         self.interval = 15;
-        self.showHeaderView = NO;
+        self.showLeftTitleView = NO;
         self.showRightSettingView = NO;
         self.showTitleHorizontalLine = NO;
         self.showsVerticalScrollIndicator = YES;
@@ -65,7 +65,8 @@ static NSString *const kJACard = @"kJACard";
         self.subTitleColorString = @"#6478B5";
         self.contentColorString = @"#333333";
         
-        [self initSubViews];
+        self.dataSource = dataSource;
+        self.delegate = delegate;
         
     }
     return self;
@@ -148,10 +149,11 @@ static NSString *const kJACard = @"kJACard";
         [card setToolBarViewAndUpdateConstraints:view];
     }
     
-    card.showHeaderView = self.showHeaderView;
+    card.showLeftTitleView = self.showLeftTitleView;
     card.showRightSettingView = self.showRightSettingView;
     card.showTitleHorizontalLine = self.showTitleHorizontalLine;
     card.autoFilterTransferredMeaningCharacterInSubTitle = self.autoFilterTransferredMeaningCharacterInSubTitle;
+    card.autoFilterTransferredMeaningCharacterInContent = self.autoFilterTransferredMeaningCharacterInContent;
     card.theSecondColumnDistanceFromCenterX = self.theSecondColumnDistanceFromCenterX;
     card.interval = self.interval;
     card.theDistanceBetweenSubTitleAndSubTitleContent = self.theDistanceBetweenSubTitleAndSubTitleContent;
@@ -195,7 +197,7 @@ static NSString *const kJACard = @"kJACard";
         CGFloat height = [self.delegate cardView:self heightForToolBarViewWithCardOpened:status atIndex:indexPath.row];
         toolBarHeight = height == 0 ? height : height + 20;
     }
-    
+
     if (status) {
         return 15 + 20 + 20 + self.maxExhibitionLineCount *30 + 10 + toolBarHeight + 10 + self.interval;
     }
@@ -223,6 +225,29 @@ static NSString *const kJACard = @"kJACard";
 }
 
 #pragma mark - Setter
+- (void)setDelegate:(id<JACardViewDelegate>)delegate {
+    _delegate = delegate;
+
+    if (_delegate && [_delegate respondsToSelector:@selector(headerViewForCardView)] && [_delegate respondsToSelector:@selector(heightForHeaderViewOfCardView)]) {
+        self.headerBackgroundView = [[UIView alloc]init];
+        self.headerBackgroundView.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.headerBackgroundView];
+        __weak id<JACardViewDelegate> weakDelegate = _delegate;
+        [self.headerBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.top.equalTo(self);
+            make.height.mas_equalTo(weakDelegate.heightForHeaderViewOfCardView);
+        }];
+        
+        [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerBackgroundView.mas_bottom);
+            make.left.right.bottom.equalTo(self);
+        }];
+        
+        [self.headerBackgroundView addSubview:_delegate.headerViewForCardView];
+    }
+    
+}
+
 - (void)setCardsCount:(NSInteger)cardsCount {
     _cardsCount = cardsCount;
 
@@ -237,8 +262,8 @@ static NSString *const kJACard = @"kJACard";
         _noDataView.hidden = YES;
     }
     
-    if (self.dataSource.subTitlesOfCardView.count != 0) {
-        _maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
+    if (self.maxExhibitionLineCount == 0) {
+        self.maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
     }
     
     if (!_cardStatus) {
@@ -263,13 +288,13 @@ static NSString *const kJACard = @"kJACard";
 
 - (void)setMaxExhibitionLineCount:(NSInteger)maxExhibitionLineCount {
     _maxExhibitionLineCount = maxExhibitionLineCount;
-    if (_maxExhibitionLineCount != _cardsCount / 2) {
+    if (_maxExhibitionLineCount != ceil(self.dataSource.subTitlesOfCardView.count / 2)) {
         [_tableView reloadData];
     }
 }
 
-- (void)setShowHeaderView:(BOOL)showHeaderView {
-    _showHeaderView = showHeaderView;
+- (void)setShowLeftTitleView:(BOOL)showLeftTitleView {
+    _showLeftTitleView = showLeftTitleView;
     [_tableView reloadData];
 }
 

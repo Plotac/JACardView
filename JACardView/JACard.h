@@ -36,7 +36,7 @@
 
 @property (nonatomic,assign) BOOL showTitleHorizontalLine;
 
-@property (nonatomic,assign) BOOL showHeaderView;
+@property (nonatomic,assign) BOOL showLeftTitleView;
 
 @property (nonatomic,assign) BOOL showRightSettingView;
 
