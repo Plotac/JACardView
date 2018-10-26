@@ -63,7 +63,7 @@
 /*
  * 设置工具栏自定义View
  *
- * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+ * @param  opened 当前卡片状态   YES:打开 NO:收起
  *
  * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index设置对应高度
  *
@@ -73,7 +73,7 @@
 /*
  * 设置工具栏自定义View的高度
  *
- * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+ * @param  opened 当前卡片状态   YES:打开 NO:收起
  *
  */
 - (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
@@ -124,8 +124,7 @@
         }
     }
 }
- 
- *
+
  */
 - (void)cardView:(JACardView*)cardView contentLab:(UILabel*)contentLab atSubTitlesIndex:(NSInteger)index;
 

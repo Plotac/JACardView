@@ -1,8 +1,16 @@
 # JACardView
 ### 卡片列表视图
+ * 一种高度自定义的卡片展示类型列表
 
 ###### 效果图
 <div align=center><img src="https://github.com/Plotac/JACardView/blob/master/EffectPicture/卡片列表效果图.gif" alt="卡片列表效果图"/></div>
+
+## 目录
+* [依赖](#依赖)
+* [文件目录](#文件目录)
+* [使用](#使用)
+* [属性](#属性)
+* [实例方法](#实例方法)
 
 ## 依赖
 *  [Masonry](https://github.com/SnapKit/Masonry)
@@ -57,6 +65,17 @@
 ```
 5. 根据需求实现JACardViewDelegate (可选)
 ```objc
+
+/*
+* 设置JACardView的headerView
+*/
+- (UIView*)headerViewForCardView;
+
+/*
+* 设置JACardView的headerView的高度
+*/
+- (CGFloat)heightForHeaderViewOfCardView;
+
 /*
 * 设置标题左侧的headerView
 *
@@ -72,20 +91,20 @@
 /*
 * 设置工具栏自定义View
 *
-* @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+* @param  opened 当前卡片状态   YES:打开 NO:收起
 *
-* 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
+* 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index设置对应高度
 *
 */
-- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
 * 设置工具栏自定义View的高度
 *
-* @param  cardStatus 当前卡片状态   YES:打开 NO:收起
+* @param  opened 当前卡片状态   YES:打开 NO:收起
 *
 */
-- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
 * 点击cell触发的方法
@@ -247,7 +266,7 @@
 *
 * 默认NO 不显示
 */
-@property (nonatomic,assign) BOOL showHeaderView;
+@property (nonatomic,assign) BOOL showLeftTitleView;
 ```
 * 是否显示右侧自定义View
 ```objc
@@ -299,4 +318,30 @@
 * 默认NO 不去除
 */
 @property (nonatomic,assign) BOOL autoFilterTransferredMeaningCharacterInContent;
+```
+## 实例方法
+```objc
+/*
+* 重置某一卡片的显示状态
+*
+* 重置后的状态在界面上显示为未打开
+*/
+- (void)resetExhibitionCardStatusAtIndex:(NSInteger)index;
+
+/*
+* 重置cardView所有卡片的显示状态
+*
+* 重置后的状态在界面上显示为未打开
+*/
+- (void)resetAllExhibitionCardsStatus;
+
+/*
+* 刷新cardView
+*/
+- (void)reloadCardView;
+
+/*
+* 上滑至顶
+*/
+- (void)scrollCardViewToTopWithAnimation:(BOOL)animated;
 ```
