@@ -11,6 +11,7 @@
 * [使用](#使用)
 * [属性](#属性)
 * [实例方法](#实例方法)
+* [数据刷新](#数据刷新)
 
 ## 依赖
 *  [Masonry](https://github.com/SnapKit/Masonry)
@@ -164,9 +165,6 @@
 ```
 * 当前选中的index
 ```objc
-/*
-* 获取选中的行数的数据: [cardView.responseData objectAtIndex:cardView.selectedIndex]
-*/
 @property (nonatomic,assign) NSInteger cardsCount;
 ```
 * 子标题数组 (只读) 

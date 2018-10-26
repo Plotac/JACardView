@@ -152,7 +152,6 @@
 /*
  * 当前选中的index
  *
- * 获取选中的行数的数据: [cardView.responseData objectAtIndex:cardView.selectedIndex]
  */
 @property (nonatomic,assign) NSInteger selectedIndex;
 
