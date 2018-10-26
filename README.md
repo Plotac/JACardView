@@ -345,3 +345,5 @@
 */
 - (void)scrollCardViewToTopWithAnimation:(BOOL)animated;
 ```
+## 数据刷新
+### [Demo](https://github.com/Plotac/JACardView/tree/master/JACardViewDemo)
