@@ -14,6 +14,7 @@
 * [数据刷新](#数据刷新)
 
 ## 依赖
+    确保你的项目中有以下第三方库：
 *  [Masonry](https://github.com/SnapKit/Masonry)
 
 ## 文件目录
