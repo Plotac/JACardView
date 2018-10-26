@@ -39,15 +39,24 @@
 @protocol JACardViewDelegate <NSObject>
 
 @optional
+
+/*
+ * 设置JACardView的headerView
+ */
+- (UIView*)headerViewForCardView;
+
+/*
+ * 设置JACardView的headerView的高度
+ */
+- (CGFloat)heightForHeaderViewOfCardView;
+
 /*
  * 设置标题左侧的headerView
- *
  */
 - (UIView*)cardView:(JACardView*)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index;
 
 /*
  * 设置标题右侧的自定义View
- *
  */
 - (UIView*)cardView:(JACardView*)cardView viewForRightSettingViewAtIndex:(NSInteger)index;
 
@@ -56,10 +65,10 @@
  *
  * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
  *
- * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index设置对应高度
+ * 使用此方法时，需使用- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index设置对应高度
  *
  */
-- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (UIView*)cardView:(JACardView*)cardView viewForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
  * 设置工具栏自定义View的高度
@@ -67,7 +76,7 @@
  * @param  cardStatus 当前卡片状态   YES:打开 NO:收起
  *
  */
-- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index;
+- (CGFloat)cardView:(JACardView*)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index;
 
 /*
  * 点击cell触发的方法
@@ -243,7 +252,7 @@
  *
  * 默认NO 不显示
  */
-@property (nonatomic,assign) BOOL showHeaderView;
+@property (nonatomic,assign) BOOL showLeftTitleView;
 
 /*
  * 是否显示右侧自定义View

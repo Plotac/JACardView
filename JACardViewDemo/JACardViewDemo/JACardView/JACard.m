@@ -14,7 +14,7 @@
 
 @property (nonatomic,strong) UIView *titleView;
 
-@property (nonatomic,strong) UIView *headView;
+@property (nonatomic,strong) UIView *leftCustomView;
 
 @property (nonatomic,strong) UIView *horizontalLine;
 
@@ -53,15 +53,15 @@
         make.height.mas_equalTo(45);
     }];
     
-    self.headView = [[UIView alloc]init];
-    self.headView.backgroundColor = [UIColor clearColor];
-    [self.titleView addSubview:self.headView];
-    [self.headView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.leftCustomView = [[UIView alloc]init];
+    self.leftCustomView.backgroundColor = [UIColor clearColor];
+    [self.titleView addSubview:self.leftCustomView];
+    [self.leftCustomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleView).with.offset(15);
         make.top.equalTo(self.titleView).with.offset(15);
         make.size.mas_equalTo(CGSizeMake(17, 17));
     }];
-    self.headView.hidden = YES;
+    self.leftCustomView.hidden = YES;
     
     self.rightCustomView = [[UIView alloc]init];
     self.rightCustomView.backgroundColor = [UIColor clearColor];
@@ -126,7 +126,7 @@
 #pragma mark - Public
 - (void)setHeadViewAndUpdateConstraints:(UIView *)inputView {
     
-    for (UIView *view in self.headView.subviews) {
+    for (UIView *view in self.leftCustomView.subviews) {
         [view removeFromSuperview];
     }
     
@@ -140,17 +140,17 @@
         return;
     }
     
-    [self.headView addSubview:inputView];
-    [self.headView mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.leftCustomView addSubview:inputView];
+    [self.leftCustomView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).with.offset(15);
         make.top.equalTo(self.contentView).with.offset(15);
         make.size.mas_equalTo(inputView.frame.size);
     }];
     
     [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.headView.mas_right).with.offset(10);
+        make.left.equalTo(self.leftCustomView.mas_right).with.offset(10);
         make.right.equalTo(self.rightCustomView.mas_left).with.offset(-10);
-        make.centerY.equalTo(self.headView);
+        make.centerY.equalTo(self.leftCustomView);
         make.height.mas_equalTo(20);
     }];
 }
@@ -331,10 +331,10 @@
     }
 }
 
-- (void)setShowHeaderView:(BOOL)showHeaderView {
-    _showHeaderView = showHeaderView;
-    self.headView.hidden = !showHeaderView;
-    if (self.headView.hidden) {
+- (void)setShowLeftTitleView:(BOOL)showLeftTitleView {
+    _showLeftTitleView = showLeftTitleView;
+    self.leftCustomView.hidden = !_showLeftTitleView;
+    if (self.leftCustomView.hidden) {
         [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.titleView).with.offset(15);
             make.right.equalTo(self.rightCustomView.mas_left).with.offset(-10);

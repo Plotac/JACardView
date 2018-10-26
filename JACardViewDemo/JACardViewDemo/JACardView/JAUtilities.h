@@ -9,13 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#define IS_IPHONE_X_OR_AFTER   [JAUtilities isIPhoneXOrAfter]
+#define BLOCK_WEAK_SELF             __weak __typeof(self) weakSelf = self;
 
-#define kNavToolBarHeight               44
+#define IS_IPHONE_X_OR_AFTER        [JAUtilities isIPhoneXOrAfter]
 
-#define kStatusBarHeight                (IS_IPHONE_X_OR_AFTER ? 44 : 20)
+#define kNavToolBarHeight           44
 
-#define UIColorFromHexStr(str) [JAUtilities colorWithHexString:(str)]
+#define kStatusBarHeight            (IS_IPHONE_X_OR_AFTER ? 44 : 20)
+
+#define UIColorFromHexStr(str)      [JAUtilities colorWithHexString:(str)]
 
 @interface JAUtilities : NSObject
 

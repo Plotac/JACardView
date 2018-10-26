@@ -31,6 +31,8 @@ static NSString *const kJACard = @"kJACard";
 
 @interface JACardView ()<UITableViewDataSource,UITableViewDelegate>
 
+@property (nonatomic,strong) UIView *headerBackgroundView;
+
 @property (nonatomic,strong) NSMutableArray *cardStatus;
 
 @property (nonatomic,strong) UIView *noDataView;
@@ -44,14 +46,13 @@ static NSString *const kJACard = @"kJACard";
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.dataSource = dataSource;
-        self.delegate = delegate;
+        [self initSubViews];
         
         self.defaultExhibitionLineCount = kDefaultExhibitionLineCount;
         self.maxExhibitionLineCount = 0;
         self.theSecondColumnDistanceFromCenterX = 20;
         self.interval = 15;
-        self.showHeaderView = NO;
+        self.showLeftTitleView = NO;
         self.showRightSettingView = NO;
         self.showTitleHorizontalLine = NO;
         self.showsVerticalScrollIndicator = YES;
@@ -64,7 +65,8 @@ static NSString *const kJACard = @"kJACard";
         self.subTitleColorString = @"#6478B5";
         self.contentColorString = @"#333333";
         
-        [self initSubViews];
+        self.dataSource = dataSource;
+        self.delegate = delegate;
         
     }
     return self;
@@ -147,7 +149,7 @@ static NSString *const kJACard = @"kJACard";
         [card setToolBarViewAndUpdateConstraints:view];
     }
     
-    card.showHeaderView = self.showHeaderView;
+    card.showLeftTitleView = self.showLeftTitleView;
     card.showRightSettingView = self.showRightSettingView;
     card.showTitleHorizontalLine = self.showTitleHorizontalLine;
     card.autoFilterTransferredMeaningCharacterInSubTitle = self.autoFilterTransferredMeaningCharacterInSubTitle;
@@ -223,6 +225,29 @@ static NSString *const kJACard = @"kJACard";
 }
 
 #pragma mark - Setter
+- (void)setDelegate:(id<JACardViewDelegate>)delegate {
+    _delegate = delegate;
+
+    if (_delegate && [_delegate respondsToSelector:@selector(headerViewForCardView)] && [_delegate respondsToSelector:@selector(heightForHeaderViewOfCardView)]) {
+        self.headerBackgroundView = [[UIView alloc]init];
+        self.headerBackgroundView.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.headerBackgroundView];
+        __weak id<JACardViewDelegate> weakDelegate = _delegate;
+        [self.headerBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.top.equalTo(self);
+            make.height.mas_equalTo(weakDelegate.heightForHeaderViewOfCardView);
+        }];
+        
+        [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.headerBackgroundView.mas_bottom);
+            make.left.right.bottom.equalTo(self);
+        }];
+        
+        [self.headerBackgroundView addSubview:_delegate.headerViewForCardView];
+    }
+    
+}
+
 - (void)setCardsCount:(NSInteger)cardsCount {
     _cardsCount = cardsCount;
 
@@ -268,8 +293,8 @@ static NSString *const kJACard = @"kJACard";
     }
 }
 
-- (void)setShowHeaderView:(BOOL)showHeaderView {
-    _showHeaderView = showHeaderView;
+- (void)setShowLeftTitleView:(BOOL)showLeftTitleView {
+    _showLeftTitleView = showLeftTitleView;
     [_tableView reloadData];
 }
 

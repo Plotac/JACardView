@@ -73,6 +73,17 @@
 }
 
 #pragma mark - JACardViewDelegate
+- (UIView*)headerViewForCardView {
+    UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
+    segment.frame = CGRectMake(15, 15, self.view.frame.size.width - 30, 30);
+    [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    return segment;
+}
+
+- (CGFloat)heightForHeaderViewOfCardView {
+    return 60;
+}
+
 - (UIView*)cardView:(JACardView *)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index {
     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 19, 19)];
     imgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%d",(int)index%6 + 1]];
@@ -94,10 +105,10 @@
     return button;
 }
 
-- (UIView*)cardView:(JACardView *)cardView viewForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index {
+- (UIView*)cardView:(JACardView *)cardView viewForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index {
     UIView *toolView = nil;
     
-    if (cardStatus) {
+    if (opened) {
         toolView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 45)];
         
         UIView *topLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
@@ -136,8 +147,8 @@
     return toolView;
 }
 
-- (CGFloat)cardView:(JACardView *)cardView heightForToolBarViewWithCardOpened:(BOOL)cardStatus atIndex:(NSInteger)index {
-    if (cardStatus) {
+- (CGFloat)cardView:(JACardView *)cardView heightForToolBarViewWithCardOpened:(BOOL)opened atIndex:(NSInteger)index {
+    if (opened) {
         return 45;
     }
     return 0;
@@ -209,18 +220,18 @@
 - (void)segmentAction:(UISegmentedControl*)seg {
     switch (seg.selectedSegmentIndex) {
         case 0:{
-            self.cardView.showHeaderView = NO;
+            self.cardView.showLeftTitleView = NO;
             self.cardView.showRightSettingView = YES;
         }
             break;
         case 1:{
-            self.cardView.showHeaderView = YES;
+            self.cardView.showLeftTitleView = YES;
             self.cardView.showRightSettingView = NO;
         }
             break;
 
         case 2:{
-            self.cardView.showHeaderView = YES;
+            self.cardView.showLeftTitleView = YES;
             self.cardView.showRightSettingView = YES;
         }
             break;
@@ -230,6 +241,8 @@
 }
 
 - (void)rightBtnAction:(UIButton*)sender {
+    NSLog(@"RightButton ClickedIndex : %d",(int)sender.tag - 500);
+    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"RightButton Action" message:[NSString stringWithFormat:@"CardIndex:%d",(int)sender.tag - 100] preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:action];
@@ -237,6 +250,9 @@
 }
 
 - (void)toolBtnAction:(UIButton*)sender {
+    
+    NSLog(@"ToolButton ClickedIndex : %d",(int)sender.tag - 500);
+    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ToolButton Action" message:[NSString stringWithFormat:@"ButtonIndex:%d",(int)sender.tag - 500] preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:action];
@@ -246,27 +262,17 @@
 #pragma mark - Private
 - (void)initSubViews {
     
-    UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
-    [self.view addSubview:segment];
-    [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-
-    [segment mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).with.offset(15);
-        make.top.equalTo(self.view).with.offset(kStatusBarHeight + kNavToolBarHeight + 15);
-        make.size.mas_equalTo(CGSizeMake(self.view.frame.size.width - 30, 30));
-    }];
-    
     self.cardView = [JACardView cardViewWithFrame:CGRectZero dataSource:self delegate:self];
     self.cardView.backgroundColor = [UIColor clearColor];
     self.cardView.showsVerticalScrollIndicator = NO;
-    self.cardView.showHeaderView = YES;
+    self.cardView.showLeftTitleView = YES;
     self.cardView.showRightSettingView = YES;
     self.cardView.showTitleHorizontalLine = YES;
     self.cardView.subTitleSuffix = @"：";
     self.cardView.autoFilterTransferredMeaningCharacterInSubTitle = YES;
     [self.view addSubview:self.cardView];
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(segment.mas_bottom).with.offset(10);
+        make.top.equalTo(self.view).with.offset(kStatusBarHeight + kNavToolBarHeight);
         make.left.right.bottom.equalTo(self.view);
     }];
     /*
