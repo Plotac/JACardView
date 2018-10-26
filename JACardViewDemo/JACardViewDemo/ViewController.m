@@ -171,7 +171,7 @@
 #pragma mark - Refresh
 - (void)addCardViewRefreshHeader {
     
-    __weak __typeof(self) weakSelf = self;
+    BLOCK_WEAK_SELF
     self.cardView.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         
         [weakSelf.titles removeAllObjects];
@@ -190,7 +190,7 @@
 
 - (void)addCardViewRefreshFooter {
     
-    __weak __typeof(self) weakSelf = self;
+    BLOCK_WEAK_SELF
     self.cardView.tableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
         
         static int countNum = 1;
