@@ -23,7 +23,6 @@
 
 #import "JACardView.h"
 #import "Masonry.h"
-#import "JACard.h"
 #import "JAUtilities.h"
 
 static NSString *const kJACard = @"kJACard";
@@ -152,6 +151,7 @@ static NSString *const kJACard = @"kJACard";
     card.showRightSettingView = self.showRightSettingView;
     card.showTitleHorizontalLine = self.showTitleHorizontalLine;
     card.autoFilterTransferredMeaningCharacterInSubTitle = self.autoFilterTransferredMeaningCharacterInSubTitle;
+    card.autoFilterTransferredMeaningCharacterInContent = self.autoFilterTransferredMeaningCharacterInContent;
     card.theSecondColumnDistanceFromCenterX = self.theSecondColumnDistanceFromCenterX;
     card.interval = self.interval;
     card.theDistanceBetweenSubTitleAndSubTitleContent = self.theDistanceBetweenSubTitleAndSubTitleContent;
