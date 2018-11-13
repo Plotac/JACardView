@@ -73,17 +73,6 @@
 }
 
 #pragma mark - JACardViewDelegate
-- (UIView*)headerViewForCardView {
-    UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
-    segment.frame = CGRectMake(15, 15, self.view.frame.size.width - 30, 30);
-    [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-    return segment;
-}
-
-- (CGFloat)heightForHeaderViewOfCardView {
-    return 60;
-}
-
 - (UIView*)cardView:(JACardView *)cardView viewForTitleHeaderViewAtIndex:(NSInteger)index {
     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 19, 19)];
     imgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon_%d",(int)index%6 + 1]];
@@ -261,6 +250,16 @@
 #pragma mark - Private
 - (void)initSubViews {
     
+    UISegmentedControl *segment = [[UISegmentedControl alloc]initWithItems:@[@"不显示leftView",@"不显示rightView",@"重置"]];
+    [segment addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:segment];
+    [segment mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).with.offset(15);
+        make.top.equalTo(self.view).with.offset(kStatusBarHeight + kNavToolBarHeight + 15);
+        make.right.equalTo(self.view).with.offset(-15);
+        make.height.mas_equalTo(30);
+    }];
+    
     self.cardView = [JACardView cardViewWithFrame:CGRectZero dataSource:self delegate:self];
     self.cardView.backgroundColor = [UIColor clearColor];
     self.cardView.showsVerticalScrollIndicator = NO;
@@ -271,7 +270,7 @@
     self.cardView.autoFilterTransferredMeaningCharacterInSubTitle = YES;
     [self.view addSubview:self.cardView];
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(kStatusBarHeight + kNavToolBarHeight);
+        make.top.equalTo(segment.mas_bottom).with.offset(15);
         make.left.right.bottom.equalTo(self.view);
     }];
     /*

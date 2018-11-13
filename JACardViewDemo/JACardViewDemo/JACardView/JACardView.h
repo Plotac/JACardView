@@ -39,17 +39,6 @@
 @protocol JACardViewDelegate <NSObject>
 
 @optional
-
-/*
- * 设置JACardView的headerView
- */
-- (UIView*)headerViewForCardView;
-
-/*
- * 设置JACardView的headerView的高度
- */
-- (CGFloat)heightForHeaderViewOfCardView;
-
 /*
  * 设置标题左侧的headerView
  */

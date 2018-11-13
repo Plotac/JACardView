@@ -225,29 +225,6 @@ static NSString *const kJACard = @"kJACard";
 }
 
 #pragma mark - Setter
-- (void)setDelegate:(id<JACardViewDelegate>)delegate {
-    _delegate = delegate;
-
-    if (_delegate && [_delegate respondsToSelector:@selector(headerViewForCardView)] && [_delegate respondsToSelector:@selector(heightForHeaderViewOfCardView)]) {
-        self.headerBackgroundView = [[UIView alloc]init];
-        self.headerBackgroundView.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.headerBackgroundView];
-        __weak id<JACardViewDelegate> weakDelegate = _delegate;
-        [self.headerBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.equalTo(self);
-            make.height.mas_equalTo(weakDelegate.heightForHeaderViewOfCardView);
-        }];
-        
-        [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.headerBackgroundView.mas_bottom);
-            make.left.right.bottom.equalTo(self);
-        }];
-        
-        [self.headerBackgroundView addSubview:_delegate.headerViewForCardView];
-    }
-    
-}
-
 - (void)setCardsCount:(NSInteger)cardsCount {
     _cardsCount = cardsCount;
 
