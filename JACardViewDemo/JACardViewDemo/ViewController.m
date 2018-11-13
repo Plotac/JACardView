@@ -241,7 +241,7 @@
     
     NSLog(@"ToolButton ClickedIndex : %d",(int)sender.tag - 500);
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ToolButton Action" message:[NSString stringWithFormat:@"ButtonIndex:%d",(int)sender.tag - 500] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"ToolButton Action" message:[NSString stringWithFormat:@"ButtonIndex:%d ----- %@",(int)sender.tag - 500,[sender titleForState:UIControlStateNormal]] preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:action];
     [self presentViewController:alert animated:YES completion:nil];
