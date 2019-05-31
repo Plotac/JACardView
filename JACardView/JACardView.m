@@ -113,6 +113,12 @@ static NSString *const kJACard = @"kJACard";
         self.maxExhibitionLineCount = ceil(self.dataSource.subTitlesOfCardView.count / 2);
     }
     
+    if (self.dataSource.subTitlesOfCardView.count / 2 <= self.defaultExhibitionLineCount) {
+        card.moreBtn.hidden = YES;
+    }else {
+        card.moreBtn.hidden = NO;
+    }
+    
     [card.moreBtn addTarget:self action:@selector(moreBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     card.moreBtn.tag = indexPath.row + 100;
     
