@@ -161,7 +161,7 @@
 
 /*
  * JACardView中的tableView
- * 使用该属性进行刷新设置
+ * 使用该属性进行相关刷新设置
  */
 @property (nonatomic,strong,readonly) UITableView *mainTableView;
 
