@@ -187,9 +187,10 @@
 @property (nonatomic,weak) id<JACardViewDataSource> dataSource;
 @property (nonatomic,weak) id<JACardViewDelegate> delegate;
 ```
-* Main TableView 
+* JACardView中的tableView 
+* 使用该属性进行刷新设置
 ```objc
-@property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,strong,readonly) UITableView *mainTableView;
 ```
 * 自定义默认显示行数
 ```objc
