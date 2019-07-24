@@ -161,8 +161,9 @@
 
 /*
  * JACardView中的tableView
+ * 使用该属性进行刷新设置
  */
-@property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,strong,readonly) UITableView *mainTableView;
 
 /*
  * 默认显示几行数据

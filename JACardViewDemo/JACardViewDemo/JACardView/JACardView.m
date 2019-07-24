@@ -31,6 +31,8 @@ static NSString *const kJACard = @"kJACard";
 
 @interface JACardView ()<UITableViewDataSource,UITableViewDelegate>
 
+@property (nonatomic,strong) UITableView *tableView;
+
 @property (nonatomic,strong) UIView *headerBackgroundView;
 
 @property (nonatomic,strong) NSMutableArray *cardStatus;
@@ -228,6 +230,11 @@ static NSString *const kJACard = @"kJACard";
         [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     }
     
+}
+
+#pragma mark - Getter
+- (UITableView*)mainTableView {
+    return _tableView;
 }
 
 #pragma mark - Setter
