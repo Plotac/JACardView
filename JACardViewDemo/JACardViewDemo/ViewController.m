@@ -39,7 +39,7 @@
     [self addCardViewRefreshHeader];
     [self addCardViewRefreshFooter];
     
-    NSLog(@"Test11111 --");
+    NSLog(@"Test123 --");
 }
 
 #pragma mark - JACardViewDataSource
