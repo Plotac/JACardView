@@ -38,7 +38,6 @@
     
     [self addCardViewRefreshHeader];
     [self addCardViewRefreshFooter];
-
     NSLog(@"git rebase -test11");
 }
 
